@@ -1,12 +1,12 @@
+import './config/dotenvConf';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
-import dotenv from 'dotenv';
+
 import router from './router';
 import connection from './config/db';
 
-dotenv.config();
 
 // Midlware connecting
 const app = express();
@@ -18,7 +18,8 @@ app.use(cors());
 app.use(morgan('dev'));
 app.use(cookieParser());
 
-router(app);
+// routes middleware
+app.use('/api', router);
 
 // turn on the server
 const PORT = process.env.PORT || 3002;

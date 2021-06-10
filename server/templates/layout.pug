@@ -1,0 +1,36 @@
+doctype html
+html
+    head
+        meta(http-equiv='Content-Type', content='text/html; charset=UTF-8')
+        title= "GOprogramming"
+        style(type='text/css')
+            include style.css
+
+    body(leftmargin='0', marginwidth='0', topmargin='0', marginheight='0', offset='0')
+        center
+            table#bodyTable(align='center', border='0', cellpadding='0', cellspacing='0', height='100%', width='100%')
+                tr
+                    td#bodyCell(align='center', valign='top')
+                        //- BEGIN TEMPLATE
+                        table#templateContainer(border='0', cellpadding='0', cellspacing='0')
+                            tr
+                                td(align='center', valign='top')
+                                    //- BEGIN HEADER
+                                    table#templateHeader(border='0', cellpadding='0', cellspacing='0', width='100%')
+                                        tr
+                                            td.headerContent(valign='top')
+                                                //- img#headerImage(width=160 src='https://i.ibb.co/TH06N8J/logo.png' style='max-width: 600px; margin: 0 auto;')
+                                                a(href="https://goprogramming.ru" style="text-decoration:none;color:inherit;outline:none")
+                                                    img#headerImage(width=160 height=31 alt="GOprogramming.ru" style="margin: 0 auto;" src="https://i.ibb.co/TH06N8J/logo.png")
+                                    //- END HEADER
+                            tr
+                                td(align='center', valign='top')
+                                    //-  BEGIN BODY
+                                    table#templateBody(border='0', cellpadding='0', cellspacing='0', width='100%')
+                                        tr
+                                            td.bodyContent(valign='top',)
+                                                block body
+
+                                                p
+                                                    em С уважением,<br/>goprogramming.ru
+
