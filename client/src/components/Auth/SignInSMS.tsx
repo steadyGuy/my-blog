@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Button, makeStyles, InputAdornment, IconButton, TextField } from '@material-ui/core'
 import { useFormik } from 'formik';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { validateLogin } from '../../utils/validateLogin';
 
 const useStyles = makeStyles((theme) => ({
@@ -26,12 +24,6 @@ export const SignInSMS = () => {
       alert(JSON.stringify(values, null, 2));
     },
   });
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
   return (
     <form noValidate onSubmit={formik.handleSubmit} className={classes.form}>
       <TextField

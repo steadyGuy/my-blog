@@ -4,6 +4,8 @@ import { useFormik } from 'formik';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { validateLogin } from '../../utils/validateLogin';
+import { useDispatch } from 'react-redux';
+import { login } from '../../redux/actions/AuthActions';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -16,15 +18,18 @@ const useStyles = makeStyles((theme) => ({
 
 export const SignIn = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
   const formik = useFormik({
     validateOnChange: false,
     initialValues: {
-      email: '',
+      account: '',
       password: '',
     },
     validationSchema: validateLogin(),
     onSubmit: values => {
       alert(JSON.stringify(values, null, 2));
+      dispatch(login(formik.values))
     },
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -36,20 +41,20 @@ export const SignIn = () => {
   return (
     <form noValidate onSubmit={formik.handleSubmit} className={classes.form}>
       <TextField
-        error={!!formik.errors.email && !!formik.touched.email}
+        error={!!formik.errors.account && !!formik.touched.account}
         variant="outlined"
         margin="normal"
         required
         fullWidth
-        id="email"
-        label="Email Address"
-        name="email"
-        autoComplete="email"
+        id="account"
+        label="Email / Phone Number"
+        name="account"
+        autoComplete="account"
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        value={formik.values.email}
+        value={formik.values.account}
         autoFocus
-        helperText={formik.touched.email && formik.errors.email ? formik.errors.email : null}
+        helperText={formik.touched.account && formik.errors.account ? formik.errors.account : null}
       />
       <TextField
         error={!!formik.errors.password && !!formik.touched.password}
@@ -60,6 +65,7 @@ export const SignIn = () => {
         name="password"
         label="Password"
         onBlur={formik.handleBlur}
+        onChange={formik.handleChange}
         type={showPassword ? 'text' : 'password'}
         id="password"
         autoComplete="current-password"
