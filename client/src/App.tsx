@@ -5,7 +5,7 @@ import Header from './components/global/Header';
 import { PageRender } from './PageRender';
 function App() {
   return (
-    <div className="container">
+    <>
       <Router>
         <Header />
         <Switch>
@@ -15,7 +15,7 @@ function App() {
         </Switch>
       </Router>
       <Footer />
-    </div>
+    </>
   );
 }
 
