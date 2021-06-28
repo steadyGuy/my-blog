@@ -8,7 +8,7 @@ export const postAPI = async (url: string, form: object, token?: string): Promis
     return data;
   } catch (err) {
     if (err?.response) {
-      return err.response.data;
+      return { error: err.response?.data };
     }
     console.log('Error with auth request', err.message);
   }

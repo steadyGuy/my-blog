@@ -4,8 +4,10 @@ import { useFormik } from 'formik';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { validateLogin } from '../../utils/validateLogin';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../redux/actions/AuthActions';
+import { Loader } from '../Notification/Loader';
+import { selectAuthLoadingState } from '../../redux/selectors';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -19,6 +21,8 @@ const useStyles = makeStyles((theme) => ({
 export const SignIn = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
+  const isLoading = useSelector(selectAuthLoadingState)
 
   const formik = useFormik({
     validateOnChange: false,
@@ -28,7 +32,6 @@ export const SignIn = () => {
     },
     validationSchema: validateLogin(),
     onSubmit: values => {
-      alert(JSON.stringify(values, null, 2));
       dispatch(login(formik.values))
     },
   });
@@ -40,6 +43,7 @@ export const SignIn = () => {
 
   return (
     <form noValidate onSubmit={formik.handleSubmit} className={classes.form}>
+      {isLoading && <Loader />}
       <TextField
         error={!!formik.errors.account && !!formik.touched.account}
         variant="outlined"

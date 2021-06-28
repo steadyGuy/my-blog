@@ -1,5 +1,5 @@
 import { AnyAction, Dispatch, Middleware } from 'redux';
-import { RootState } from '../types';
+import { RootState } from '../store';
 
 export const logger: Middleware<{}, RootState> = (store) => (next: Dispatch<AnyAction>) => (action) => {
   let result;

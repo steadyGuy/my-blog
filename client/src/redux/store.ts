@@ -8,4 +8,6 @@ import { logger } from './middlewares/logger';
 //createStore(rootReducer, composeWithDevTools(applyMiddleware(thunk)));
 const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(logger, thunk)));
 
+export type RootState = ReturnType<typeof rootReducer>
+
 export default store;
