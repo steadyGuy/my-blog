@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { makeStyles, InputAdornment, IconButton } from '@material-ui/core'
+import { makeStyles, InputAdornment, IconButton, TextField } from '@material-ui/core'
 import { useFormik } from 'formik';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
@@ -11,7 +11,6 @@ import { Notification } from '../Notification';
 import { selectAuthErrors, selectAuthLoadingState } from '../../redux/selectors';
 import { AUTH_FAILURE } from '../../redux/constants/authType';
 import { SubmitButton } from './components/SubmitBtn';
-import { Input } from './components/Input';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -19,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const SignIn = () => {
+export const Register = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const isLoading = useSelector(selectAuthLoadingState);
@@ -55,13 +54,36 @@ export const SignIn = () => {
           errors={errors}
           severity="error"
         />}
-      <Input formik={formik} label="Email / Phone Number" autoFocus name="account" />
-      <Input
-        formik={formik}
-        label="Password"
+      <TextField
+        error={!!formik.errors.account && !!formik.touched.account}
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
+        id="account"
+        label="Email / Phone Number"
+        name="account"
+        autoComplete="account"
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        value={formik.values.account}
+        autoFocus
+        helperText={formik.touched.account && formik.errors.account ? formik.errors.account : null}
+      />
+      <TextField
+        error={!!formik.errors.password && !!formik.touched.password}
+        variant="outlined"
+        margin="normal"
+        required
+        fullWidth
         name="password"
+        label="Password"
+        onBlur={formik.handleBlur}
+        onChange={formik.handleChange}
         type={showPassword ? 'text' : 'password'}
+        id="password"
         autoComplete="current-password"
+        helperText={formik.touched.password && formik.errors.password ? formik.errors.password : null}
         InputProps={{
           endAdornment:
             <InputAdornment position="end">
@@ -75,7 +97,7 @@ export const SignIn = () => {
             </InputAdornment>
         }}
       />
-      <SubmitButton title={"Sign In"} />
+      <SubmitButton title={"Sign Up"} />
     </form>
   )
 }

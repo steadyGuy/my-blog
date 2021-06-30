@@ -1,4 +1,4 @@
-import { UserTypeActions, AUTH, IAuthState, AUTH_LOADING, AUTH_FAILURE } from '../constants/authType';
+import { UserTypeActions, AUTH_SUCCESS, IAuthState, AUTH_LOADING, AUTH_FAILURE } from '../constants/authType';
 
 const initilState: IAuthState = {
   user: null,
@@ -10,7 +10,7 @@ const initilState: IAuthState = {
 export const authReducer = (state = initilState, action: UserTypeActions): IAuthState => {
 
   switch (action.type) {
-    case AUTH:
+    case AUTH_SUCCESS:
       return { ...state, ...action.payload };
     case AUTH_LOADING:
       return { ...state, loading: action.payload }

@@ -1,7 +1,7 @@
 import { Action } from 'redux';
 import { IUser } from '../../interfaces/user';
 
-export const AUTH = 'AUTH';
+export const AUTH_SUCCESS = 'AUTH_SUCCESS';
 export const AUTH_LOADING = 'AUTH_LOADING'
 export const AUTH_FAILURE = 'AUTH_FAILURE'
 
@@ -15,8 +15,8 @@ export interface IAuthState extends IAuthReturned {
   loading: boolean;
 }
 
-export interface IAuthActionType extends Action<typeof AUTH> {
-  payload: IAuthReturned
+export interface IAuthActionSetSuccess extends Action<typeof AUTH_SUCCESS> {
+  payload: IAuthReturned & { errors: null }
 }
 
 export interface IAuthActionSetLoading extends Action<typeof AUTH_LOADING> {
@@ -27,4 +27,4 @@ export interface IAuthActionSetErrors extends Action<typeof AUTH_FAILURE> {
   payload: string | string[];
 }
 
-export type UserTypeActions = IAuthActionType | IAuthActionSetLoading | IAuthActionSetErrors;
+export type UserTypeActions = IAuthActionSetSuccess | IAuthActionSetLoading | IAuthActionSetErrors;
