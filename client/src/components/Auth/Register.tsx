@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { makeStyles, InputAdornment, IconButton, TextField } from '@material-ui/core'
+import { makeStyles, InputAdornment, IconButton } from '@material-ui/core'
 import { useFormik } from 'formik';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import { validateLogin } from '../../utils/validateLogin';
-import { useDispatch, useSelector } from 'react-redux';
-import { login } from '../../redux/actions/AuthActions';
-import { Loader } from '../Notification/Loader';
-import { Notification } from '../Notification';
-import { selectAuthErrors, selectAuthLoadingState } from '../../redux/selectors';
-import { AUTH_FAILURE } from '../../redux/constants/authType';
-import { SubmitButton } from './components/SubmitBtn';
+import { validateRegister } from '../../utils/validateAuth';
+import { useDispatch } from 'react-redux';
+import { register } from '../../redux/actions/AuthActions';
+import { SubmitButton, Input } from './components';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -21,25 +17,22 @@ const useStyles = makeStyles((theme) => ({
 export const Register = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const isLoading = useSelector(selectAuthLoadingState);
-  const errors = useSelector(selectAuthErrors);
-
-  const handleCloseError = () => {
-    dispatch({ type: AUTH_FAILURE, payload: null });
-  }
 
   const formik = useFormik({
     validateOnChange: false,
     initialValues: {
+      name: '',
       account: '',
       password: '',
+      passwordConfirm: '',
     },
-    validationSchema: validateLogin(),
+    validationSchema: validateRegister(),
     onSubmit: values => {
-      dispatch(login(values))
+      dispatch(register(values))
     },
   });
   const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -47,43 +40,14 @@ export const Register = () => {
 
   return (
     <form noValidate onSubmit={formik.handleSubmit} className={classes.form}>
-      {isLoading && <Loader />}
-      {errors &&
-        <Notification
-          handleClose={handleCloseError}
-          errors={errors}
-          severity="error"
-        />}
-      <TextField
-        error={!!formik.errors.account && !!formik.touched.account}
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        id="account"
-        label="Email / Phone Number"
-        name="account"
-        autoComplete="account"
-        onChange={formik.handleChange}
-        onBlur={formik.handleBlur}
-        value={formik.values.account}
-        autoFocus
-        helperText={formik.touched.account && formik.errors.account ? formik.errors.account : null}
-      />
-      <TextField
-        error={!!formik.errors.password && !!formik.touched.password}
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        name="password"
+      <Input formik={formik} label="Name" autoFocus name="name" />
+      <Input formik={formik} label="Email / Phone Number" name="account" />
+      <Input
+        formik={formik}
         label="Password"
-        onBlur={formik.handleBlur}
-        onChange={formik.handleChange}
+        name="password"
         type={showPassword ? 'text' : 'password'}
-        id="password"
         autoComplete="current-password"
-        helperText={formik.touched.password && formik.errors.password ? formik.errors.password : null}
         InputProps={{
           endAdornment:
             <InputAdornment position="end">
@@ -93,6 +57,25 @@ export const Register = () => {
                 onMouseDown={handleMouseDownPassword}
               >
                 {showPassword ? <Visibility /> : <VisibilityOff />}
+              </IconButton>
+            </InputAdornment>
+        }}
+      />
+      <Input
+        formik={formik}
+        label="Confirm password"
+        name="passwordConfirm"
+        type={showPasswordConfirm ? 'text' : 'password'}
+        autoComplete="current-password"
+        InputProps={{
+          endAdornment:
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="toggle password visibility"
+                onClick={() => setShowPasswordConfirm(prev => !prev)}
+                onMouseDown={handleMouseDownPassword}
+              >
+                {showPasswordConfirm ? <Visibility /> : <VisibilityOff />}
               </IconButton>
             </InputAdornment>
         }}

@@ -14,14 +14,14 @@ const validRegister = (req: Request, res: Response, next: NextFunction): any => 
   try {
     const errors: string[] = [];
     const {
-      name, account, password, password2,
+      name, account, password, passwordConfirm,
     } = req.body;
 
     if (!name) {
       errors.push('Пожалуйста, введите имя');
     }
 
-    if (password !== password2) {
+    if (password !== passwordConfirm) {
       errors.push('Оба пароля должны совпадать');
     }
 

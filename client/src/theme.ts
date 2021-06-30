@@ -31,6 +31,23 @@ const theme = createMuiTheme({
       },
     },
   },
+  typography: {
+    subtitle1: {
+      fontSize: 12,
+    },
+    h1: {
+      fontWeight: 'bold',
+      fontSize: 54,
+    },
+    h2: {
+      fontWeight: 'bold',
+      fontSize: 36,
+    },
+    h3: {
+      fontWeight: 'bold',
+      fontSize: 24,
+    },
+  },
 });
 
 export default theme;

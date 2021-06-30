@@ -3,6 +3,11 @@ export interface IUserSignIn {
   password: string;
 }
 
+export interface IUserSignUp extends IUserSignIn {
+  name: string;
+  passwordConfirm: string;
+}
+
 export interface IUser {
   account: string;
   avatar: string;
@@ -10,4 +15,8 @@ export interface IUser {
   isActive: boolean;
   name: string;
   role: string;
+}
+
+export interface IParams {
+  slug: string;
 }

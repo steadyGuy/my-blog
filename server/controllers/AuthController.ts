@@ -47,7 +47,8 @@ const AuthController = {
   },
   activateAccount: async (req: Request, res: Response) => {
     try {
-      const decoded = <ITokenUser>jwt.verify(req.params.token, `${process.env.ACTIVE_TOKEN_SECRET}`);
+      console.log('HERE')
+      const decoded = <ITokenUser>jwt.verify(req.body.token, `${process.env.ACTIVE_TOKEN_SECRET}`);
       const { account } = decoded;
       const user = await User.findOne({ account });
       if (!user) {

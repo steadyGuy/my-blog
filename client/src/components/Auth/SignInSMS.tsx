@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import { Button, makeStyles, InputAdornment, IconButton, TextField } from '@material-ui/core'
+import { makeStyles, } from '@material-ui/core'
 import { useFormik } from 'formik';
-import { validateLogin } from '../../utils/validateLogin';
+import { validateLogin } from '../../utils/validateAuth';
+import { SubmitButton, Input } from './components';
 
 const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 1),
   },
 }));
 
@@ -26,30 +23,8 @@ export const SignInSMS = () => {
   });
   return (
     <form noValidate onSubmit={formik.handleSubmit} className={classes.form}>
-      <TextField
-        error={!!formik.errors.phone && !!formik.touched.phone}
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        name="phone"
-        label="Phone number"
-        onBlur={formik.handleBlur}
-        type='tel'
-        id="phone"
-        autoComplete="current-password"
-        helperText={formik.touched.phone && formik.errors.phone ? formik.errors.phone : null}
-      />
-      <Button
-        type="submit"
-        className={classes.submit}
-        fullWidth
-        size="large"
-        variant="contained"
-        color="primary"
-      >
-        Sign In
-      </Button>
+      <Input formik={formik} type="tel" label="Phone number" autoFocus name="phone" />
+      <SubmitButton title={"Sign In"} />
     </form>
   )
 }
