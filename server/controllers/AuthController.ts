@@ -47,21 +47,25 @@ const AuthController = {
   },
   activateAccount: async (req: Request, res: Response) => {
     try {
-      console.log('HERE')
       const decoded = <ITokenUser>jwt.verify(req.body.token, `${process.env.ACTIVE_TOKEN_SECRET}`);
       const { account } = decoded;
       const user = await User.findOne({ account });
       if (!user) {
         return res.status(400).json({ message: 'Пользователь не был зарегистрирован. Попытайтесь еще раз' });
       }
+      console.log(user)
+      if (user.isActive) {
+        return res.status(400).json({ message: 'Вы уже подтвердили свой email' });
+      }
       await User.updateOne({ account }, { isActive: true });
       return res.status(200).json({ message: 'Вы успешно подтвердили свою пошту' });
     } catch (err) {
       if (err.name === 'TokenExpiredError') {
-        return res.status(400).json({ message: 'Вы слишком долго подтверждали email. Попробуйте снова' });
+        return res.status(400).json({ message: 'Действия токена подтверждения закончилось' });
+      } else if (err.name === 'JsonWebTokenError') {
+        return res.status(400).json({ message: 'Предоставленный web-токен некорректный' });
       }
-      console.log(err);
-      return { message: err.message };
+      return res.status(500).json({ message: err.message });
     }
   },
   login: async (req: Request, res: Response): Promise<any> => {
@@ -113,8 +117,8 @@ const AuthController = {
       if (!user) {
         return res.status(400).json({ message: 'Такого пользователя не существует' });
       }
-      const accessToken = token.accessToken({ id: user.id });
-      return res.json({ message: 'Успешно', accessToken });
+      const accessToken = token.accessToken({ id: user.id, });
+      return res.json({ accessToken, user: userMapper(user) });
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }

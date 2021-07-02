@@ -5,7 +5,7 @@ const axios = Axios.create({
   // headers: {
   //   Authorization: 'Bearer ' + cookies?.token,
   // }
-  // withCredentials: true,
+  withCredentials: true,
 });
 
 export default axios;

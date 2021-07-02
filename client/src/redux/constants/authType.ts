@@ -6,7 +6,8 @@ export const AUTH_LOADING = 'AUTH_LOADING'
 export const AUTH_FAILURE = 'AUTH_FAILURE'
 
 export interface IAuthReturned {
-  token: string;
+  accessToken: string;
+  message: string;
   user: IUser | null;
 }
 

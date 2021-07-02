@@ -2,7 +2,8 @@ import { UserTypeActions, AUTH_SUCCESS, IAuthState, AUTH_LOADING, AUTH_FAILURE }
 
 const initilState: IAuthState = {
   user: null,
-  token: '',
+  accessToken: '',
+  message: '',
   loading: false,
   errors: null
 }

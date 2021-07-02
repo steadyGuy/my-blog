@@ -1,12 +1,15 @@
-import { AppBar, Button, IconButton, makeStyles, TextField, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Button, Theme, makeStyles, Link, Toolbar, Typography } from '@material-ui/core';
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import Menu from './DropDownMenu';
 import Search from './Search';
 import MenuIcon from '@material-ui/icons/Menu';
 import DropDownMenu from './DropDownMenu';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuth } from '../../redux/selectors';
+import { logOut } from '../../redux/actions/AuthActions';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   navigation: {
     flexGrow: 1,
     justifyContent: "center",
@@ -15,14 +18,39 @@ const useStyles = makeStyles((theme) => ({
     width: 0,
     opacity: 0,
   },
+  link: {
+    marginRight: theme.spacing(3),
+    fontSize: 18,
+  }
 }));
 
 const Header = () => {
 
   const classes = useStyles();
+  const location = useLocation();
+  const auth = useSelector(selectAuth);
+  const dispatch = useDispatch();
+
+  const authLinks = [
+    { label: 'Логин', path: '/login', },
+    { label: 'Регистрация', path: '/register', }
+  ];
+
+  const generalLinks = [
+    { label: 'Главная', path: '/', },
+    { label: 'Создать пост ', path: '/create', }
+  ];
+
+  const userLinks = auth.accessToken ? generalLinks : authLinks;
+
+  const isActive = (link: string) => location.pathname === link;
+
+  const handleLogout = () => {
+    dispatch(logOut());
+  }
 
   return (
-    <AppBar color="secondary" position="static">
+    <AppBar color="default" position="static" elevation={0}>
       <Toolbar>
         <Typography variant="h6" align='left'>
           Logo
@@ -31,22 +59,22 @@ const Header = () => {
           123
         </Toolbar>
         <Search />
-        <DropDownMenu />
+        {userLinks.map((link, i) => (
+          <Link
+            className={classes.link}
+            component={RouterLink}
+            key={i}
+            to={link.path}
+            color={isActive(link.path) ? 'secondary' : 'textSecondary'}
+          >
+            {link.label}
+          </Link>
+        ))}
+
+
+        {auth.user && <DropDownMenu handleLogout={handleLogout} user={auth.user} />}
       </Toolbar>
     </AppBar>
-    // <nav className="navbar navbar-expand-lg navbar-light bg-light p-3">
-    //   <div className="container-fluid">
-    //     <a className="navbar-brand" href="/">Navbar</a>
-
-    //     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    //       <span className="navbar-toggler-icon"></span>
-    //     </button>
-    //     <div className="collapse navbar-collapse" id="navbarSupportedContent">
-    //       <Search />
-    //       <Menu />
-    //     </div>
-    //   </div>
-    // </nav>
   )
 }
 

@@ -3,6 +3,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import clsx from 'clsx';
 import { FC, ReactElement, useState } from 'react';
 import { Link as LinkRouter } from 'react-router-dom';
+import { SocialButton } from './SocialButton';
 
 import { useStyles } from './styles';
 
@@ -24,6 +25,8 @@ export const Auth: FC<AuthProps> = ({ login, render }) => {
         <Typography component="h1" variant="h5" align="center">
           {login ? 'Sign in' : 'Sign up'}
         </Typography>
+
+        {login && <SocialButton />}
 
         {render?.(sms)}
 

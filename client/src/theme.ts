@@ -19,6 +19,7 @@ const theme = createMuiTheme({
     },
     background: {
       default: '#fff',
+      // paper: 'green',
     },
     text: {
       primary: '#232323',
@@ -28,8 +29,14 @@ const theme = createMuiTheme({
     MuiButton: {
       root: {
         fontSize: '1rem',
+        textTransform: 'none',
       },
     },
+    MuiAppBar: {
+      colorDefault: {
+        // backgroundColor: '#fff',
+      }
+    }
   },
   typography: {
     subtitle1: {

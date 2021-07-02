@@ -41,23 +41,20 @@ const Active = () => {
     if (slug) {
       postAPI('active', { token: slug })
         .then(res => {
-          console.log(res.error)
-          if (res?.error.message) {
+          if (res?.error?.message) {
             return setErrors(res.error.message);
           }
-          setSuccess(res.message);
+          setSuccess(res?.message);
         })
         .catch(err => {
           setErrors(err?.resposne?.data.message);
-          console.log(err, 'error')
-        })
+        });
     }
-
   }, [slug])
   return (
     <Zoom in={true}>
       <Container maxWidth="sm">
-        <Paper className={classes.paper}>
+        <Paper elevation={2} className={classes.paper}>
           {!errors ? <CheckCircleOutlineIcon fontSize="inherit" color="primary" /> :
             <ErrorOutlineIcon fontSize="inherit" color="error" />}
           <Typography align="center" variant="h3" className={classes.title}>

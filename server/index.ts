@@ -14,7 +14,7 @@ const app = express();
 // https://stackoverflow.com/questions/23259168/what-are-express-json-and-express-urlencoded
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.use(morgan('dev'));
 app.use(cookieParser());
 

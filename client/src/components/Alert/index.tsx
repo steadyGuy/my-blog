@@ -7,7 +7,7 @@ import { Toast } from './Toast';
 
 export const Alert: FC = () => {
   const state = useSelector(selectAlert);
-  // console.log(state, 'state')
+  console.log(state, 'state')
   // debugger;
   return (
     <>

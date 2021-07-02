@@ -1,13 +1,35 @@
-import { Button, Menu, MenuItem } from '@material-ui/core';
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Button, Menu, MenuItem, makeStyles, Theme, Avatar } from '@material-ui/core';
+import React, { FC, useState } from 'react'
+import { deepPurple } from '@material-ui/core/colors';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { IUser } from '../../interfaces/user';
 
-const DropDownMenu = () => {
+const useStyles = makeStyles((theme: Theme) => ({
+  menu: {
+    marginTop: theme.spacing(1),
+  },
+  menuItem: {
+    borderBottom: `solid 1px ${theme.palette.grey[100]}`
+  },
+  avatart: {
+    color: theme.palette.getContrastText(deepPurple[500]),
+    backgroundColor: deepPurple[500],
+    marginLeft: theme.spacing(1),
+    width: theme.spacing(5),
+    height: theme.spacing(5),
+  },
+}));
 
+type MenuProps = {
+  user: IUser;
+  handleLogout: any;
+}
+
+const DropDownMenu: FC<MenuProps> = ({ user, handleLogout }) => {
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(event.currentTarget)
     setAnchorEl(event.currentTarget);
   };
 
@@ -16,35 +38,21 @@ const DropDownMenu = () => {
   };
 
   return (
-    // <ul className="navbar-nav ms-auto">
-    //   {Object.entries({ "Регистрация": '/register', "Войти": '/login' }).map((item, idx) => (
-    //     <li className="nav-item" key={idx + item[0]}>
-    //       <Link className="nav-link active" aria-current="page" to={item[1]}>{item[0]}</Link>
-    //     </li>
-    //   ))}
-    //   <li className="nav-item dropdown">
-    //     <span className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    //       Имя пользователя
-    //     </span>
-    //     <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-    //       <li><Link className="dropdown-item" to="/profile">Профиль</Link></li>
-    //       <li><hr className="dropdown-divider" /></li>
-    //       <li><Link className="dropdown-item" to="/">Выйти</Link></li>
-    //     </ul>
-    //   </li>
-    // </ul>
     <div>
       <Button
-        variant="contained"
         color="secondary"
         aria-controls="simple-menu"
         aria-haspopup="true"
+        disableRipple
         onClick={handleClick}
         endIcon={<ArrowDropDownIcon />}
       >
-        User
+        {user.name.length > 8 ? user.name.slice(0, 8) + '...' : user.name}
+        <Avatar className={classes.avatart}>{user.name[0].toUpperCase()}</Avatar>
       </Button>
       <Menu
+        elevation={1}
+        getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'center',
@@ -58,10 +66,10 @@ const DropDownMenu = () => {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
+        className={classes.menu}
       >
-        <MenuItem >Profile</MenuItem>
-        <MenuItem >My account</MenuItem>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem className={classes.menuItem}>Профиль</MenuItem>
+        <MenuItem onClick={handleLogout}>Выйти</MenuItem>
       </Menu>
     </div>
   );
