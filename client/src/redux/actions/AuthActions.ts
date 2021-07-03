@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import { IUserSignIn, IUserSignUp } from '../../interfaces/user';
 import { getAPI, postAPI } from '../../utils/fetchData';
 import { ALERT, IAlertActionSet } from '../constants/alertType';
-import { AUTH_SUCCESS, AUTH_FAILURE, AUTH_LOADING, UserTypeActions } from '../constants/authType';
+import { AUTH_SUCCESS, UserTypeActions } from '../constants/authType';
 import { setAlertLoading, setAlertSuccess, unsetAlertLoading } from './AlertAction';
 
 export const login = (userLogin: IUserSignIn) => async (dispatch: Dispatch<UserTypeActions | IAlertActionSet>) => {
@@ -80,6 +80,29 @@ export const logOut = () => async (dispatch: Dispatch<UserTypeActions | IAlertAc
   try {
     await getAPI('logout');
     window.location.href = '/';
+  } catch (err) {
+    dispatch({ type: ALERT, payload: { errors: err.message } });
+  }
+}
+
+export const googleLogin = (tokenId: string) => async (dispatch: Dispatch<UserTypeActions | IAlertActionSet>) => {
+  try {
+    dispatch(setAlertLoading());
+    const data = await postAPI('google_login', { tokenId });
+
+    if (data.error) {
+      return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
+    }
+
+    dispatch({
+      type: AUTH_SUCCESS,
+      payload: data,
+    });
+    dispatch(setAlertSuccess(data.message));
+
+    localStorage.setItem('logged', 'true');
+
+    dispatch(unsetAlertLoading());
   } catch (err) {
     dispatch({ type: ALERT, payload: { errors: err.message } });
   }

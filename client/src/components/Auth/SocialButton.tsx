@@ -1,5 +1,7 @@
-import { Button, Icon, makeStyles, Theme } from '@material-ui/core';
+import { Button, makeStyles, Theme } from '@material-ui/core';
 import { GoogleLogin, GoogleLoginResponse, GoogleLoginResponseOffline } from 'react-google-login';
+import { useDispatch } from 'react-redux';
+import { googleLogin } from '../../redux/actions/AuthActions';
 
 const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
   button: {
@@ -18,8 +20,11 @@ const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
 
 export const SocialButton = () => {
   const classes = useStyles();
-  const onSuccess = (response: GoogleLoginResponse | GoogleLoginResponseOffline) => {
-    console.log(response);
+  const dispatch = useDispatch();
+  const onSuccess = (res: GoogleLoginResponse | GoogleLoginResponseOffline) => {
+    if ('profileObj' in res) {
+      dispatch(googleLogin(res.tokenId))
+    }
   }
 
   const onFailure = (err: any) => {

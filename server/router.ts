@@ -10,6 +10,7 @@ router.get('/', (req: express.Request, res: express.Response) => {
 
 router.post('/register', validator.validRegister, AuthController.register);
 router.post('/login', validator.validLogin, AuthController.login);
+router.post('/google_login', AuthController.googleLogin);
 router.get('/logout', AuthController.logout);
 
 router.post('/active', AuthController.activateAccount);

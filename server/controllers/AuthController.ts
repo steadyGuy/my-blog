@@ -1,14 +1,16 @@
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import User, { ITokenUser, IRefreshTokenUser } from '../models/User';
+import { OAuth2Client } from 'google-auth-library';
+
+import User, { ITokenUser, IRefreshTokenUser, IGooglePayload, IUser } from '../models/User';
 import token from '../config/generateToken';
 import sendEmail from '../config/sendMail';
 import sendSMS from '../config/sendSMS';
 import userMapper from '../mappers/user';
 
 const CLIENT_URL = process.env.BASE_URL;
-
+const client = new OAuth2Client(`${process.env.MAIL_CLIENT_ID}`);
 const AuthController = {
   register: async (req: Request, res: Response): Promise<any> => {
     try {
@@ -78,21 +80,7 @@ const AuthController = {
         return res.status(400).json({ message: 'Такого пользователя не существует' });
       }
 
-      const passwordOk = await bcrypt.compare(password, user.passwordHash);
-      if (!passwordOk) {
-        return res.status(400).json({ message: 'Пароль неверен' });
-      }
-
-      const accessToken = token.accessToken({ id: user.id });
-      const refreshToken = token.refreshToken({ id: user.id });
-
-      res.cookie('refreshtoken', refreshToken, {
-        httpOnly: true,
-        path: '/api/refresh_token',
-        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-      });
-
-      return res.status(200).json({ message: 'Вы успешно авторизировались', accessToken, user: userMapper(user) });
+      loginUser(user, password, res);
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
@@ -123,6 +111,65 @@ const AuthController = {
       return res.status(500).json({ message: err.message });
     }
   },
+  googleLogin: async (req: Request, res: Response) => {
+    try {
+      const { tokenId } = req.body;
+      const verify = await client.verifyIdToken({
+        idToken: tokenId,
+        audience: `${process.env.MAIL_CLIENT_ID}`,
+      });
+      const { email, email_verified, name, picture } = <IGooglePayload>verify.getPayload();
+      if (!email_verified) {
+        return res.status(500).json({ message: 'Email не верифицирован' });
+      }
+
+      const password = email + 'uniqure key';
+      const passwordHash = await bcrypt.hash(password, 12);
+
+      const user = await User.findOne({ account: email });
+
+      if (user) {
+        loginUser(user, password, res);
+      } else {
+        const newUser = new User({
+          account: email, passwordHash, name, loginType: 'social', avatart: picture, isActive: true,
+        });
+        await newUser.save()
+
+        const accessToken = token.accessToken({ id: newUser.id });
+        const refreshToken = token.refreshToken({ id: newUser.id });
+
+        res.cookie('refreshtoken', refreshToken, {
+          httpOnly: true,
+          path: '/api/refresh_token',
+          maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+        });
+
+        return res.status(200).json({ message: 'Вы успешно авторизировались', accessToken, user: userMapper(newUser) });
+      }
+
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  }
 };
+
+const loginUser = async (user: IUser, password: string, res: Response) => {
+  const passwordOk = await bcrypt.compare(password, user.passwordHash);
+  if (!passwordOk) {
+    return res.status(400).json({ message: 'Пароль неверен' });
+  }
+
+  const accessToken = token.accessToken({ id: user.id });
+  const refreshToken = token.refreshToken({ id: user.id });
+
+  res.cookie('refreshtoken', refreshToken, {
+    httpOnly: true,
+    path: '/api/refresh_token',
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+  });
+
+  return res.status(200).json({ message: 'Вы успешно авторизировались', accessToken, user: userMapper(user) });
+}
 
 export default AuthController;

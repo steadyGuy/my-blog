@@ -25,6 +25,13 @@ export interface IRefreshTokenUser {
   exp: number;
 }
 
+export interface IGooglePayload {
+  email: string;
+  email_verified: boolean;
+  name: string;
+  picture: string;
+}
+
 const schema = new Schema({
   name: {
     type: String,
@@ -38,6 +45,7 @@ const schema = new Schema({
     required: [true, 'Пожалуйста, введите email или телефон'],
     trim: true,
     unique: true,
+    lowercase: true,
   },
   passwordHash: {
     type: String,
