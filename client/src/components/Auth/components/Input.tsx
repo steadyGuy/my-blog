@@ -9,6 +9,7 @@ type InputProps = {
   InputProps?: Partial<OutlinedInputProps>;
   type?: string;
   autoComplete?: string;
+  placeholder?: string;
 }
 
 export const Input: FC<InputProps> = ({ formik, autoFocus = false, name, label, ...props }) => {

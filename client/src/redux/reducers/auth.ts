@@ -1,22 +1,18 @@
-import { UserTypeActions, AUTH_SUCCESS, IAuthState, AUTH_LOADING, AUTH_FAILURE } from '../constants/authType';
+import { UserTypeActions, IAuthReturned, AUTH_SUCCESS, AUTH_SMS_DIALOG } from '../constants/authType';
 
-const initilState: IAuthState = {
+const initilState: IAuthReturned = {
   user: null,
   accessToken: '',
   message: '',
-  loading: false,
-  errors: null
 }
 
-export const authReducer = (state = initilState, action: UserTypeActions): IAuthState => {
+export const authReducer = (state = initilState, action: UserTypeActions): IAuthReturned => {
 
   switch (action.type) {
     case AUTH_SUCCESS:
       return { ...state, ...action.payload };
-    case AUTH_LOADING:
-      return { ...state, loading: action.payload }
-    case AUTH_FAILURE:
-      return { ...state, errors: action.payload }
+    case AUTH_SMS_DIALOG:
+      return { ...state, dialog: action.payload };
     default:
       return state;
   }

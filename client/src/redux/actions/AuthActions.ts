@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import { IUserSignIn, IUserSignUp } from '../../interfaces/user';
 import { getAPI, postAPI } from '../../utils/fetchData';
 import { ALERT, IAlertActionSet } from '../constants/alertType';
-import { AUTH_SUCCESS, UserTypeActions } from '../constants/authType';
+import { AUTH_SMS_DIALOG, AUTH_SUCCESS, UserTypeActions } from '../constants/authType';
 import { setAlertLoading, setAlertSuccess, unsetAlertLoading } from './AlertAction';
 
 export const login = (userLogin: IUserSignIn) => async (dispatch: Dispatch<UserTypeActions | IAlertActionSet>) => {
@@ -61,7 +61,6 @@ export const refreshToken = () => async (dispatch: Dispatch<UserTypeActions | IA
   }
   try {
     const data = await getAPI('refresh_token');
-    console.log('REFRESH TOKEN', data);
     dispatch({
       type: AUTH_SUCCESS,
       payload: data,
@@ -92,6 +91,43 @@ export const googleLogin = (tokenId: string) => async (dispatch: Dispatch<UserTy
 
     if (data.error) {
       return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
+    }
+
+    dispatch({
+      type: AUTH_SUCCESS,
+      payload: data,
+    });
+    dispatch(setAlertSuccess(data.message));
+
+    localStorage.setItem('logged', 'true');
+
+    dispatch(unsetAlertLoading());
+  } catch (err) {
+    dispatch({ type: ALERT, payload: { errors: err.message } });
+  }
+}
+
+export const loginSMSStart = (phone: string) => async (dispatch: Dispatch<UserTypeActions | IAlertActionSet>) => {
+  try {
+    dispatch(setAlertLoading());
+    const data = await postAPI('login_sms', { phone });
+    if (data.error) {
+      return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
+    }
+    dispatch(unsetAlertLoading());
+    dispatch({ type: AUTH_SMS_DIALOG, payload: true });
+  } catch (err) {
+    dispatch({ type: ALERT, payload: { errors: err.message } });
+  }
+}
+
+export const loginSMSEnd = (code: string, phone: string) => async (dispatch: Dispatch<UserTypeActions | IAlertActionSet>) => {
+  try {
+    dispatch(setAlertLoading());
+    const data = await postAPI('sms_verify', { code, phone });
+    if (data.error) {
+      dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
+      return dispatch({ type: AUTH_SMS_DIALOG, payload: true });
     }
 
     dispatch({

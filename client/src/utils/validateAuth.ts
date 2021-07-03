@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 const loginSchema = {
   account: yup.string().test(
-    'is-jimmy',
+    'is-emailOrnumber',
     'Email or phone number is incorrect',
     (value, context) => {
       if (!value) return true;
@@ -26,12 +26,27 @@ export const validateRegister = () => {
   return yup.object({
     ...loginSchema,
     name: yup.string()
-      .required('Required')
       .max(20, 'Must be 20 characters or less')
       .min(4, 'Must be at least 4 characters'),
     passwordConfirm: yup.string()
       .required('Required')
       .oneOf([yup.ref('password'),], 'Passwords must match')
+  });
+}
+
+export const loginSchemaPhone = () => {
+  return yup.object({
+    phone: yup.string()
+      .required('Required')
+      .test(
+        'is-phone',
+        'Номер телефона невалидный',
+        (value, context) => {
+          if (!value) return true;
+          if (!validatePhone(value)) return false;
+          return true;
+        },
+      ),
   });
 }
 

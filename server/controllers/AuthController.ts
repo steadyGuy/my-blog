@@ -6,7 +6,7 @@ import { OAuth2Client } from 'google-auth-library';
 import User, { ITokenUser, IRefreshTokenUser, IGooglePayload, IUser } from '../models/User';
 import token from '../config/generateToken';
 import sendEmail from '../config/sendMail';
-import sendSMS from '../config/sendSMS';
+import { sendSMS, smsOTP, smsVerify } from '../config/sendSMS';
 import userMapper from '../mappers/user';
 
 const CLIENT_URL = process.env.BASE_URL;
@@ -151,7 +151,49 @@ const AuthController = {
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
-  }
+  },
+  loginSMS: async (req: Request, res: Response) => {
+    const { phone } = req.body;
+    const data = await smsOTP(phone, 'sms');
+    console.log(data, 'FIRST');
+    return res.status(200).json({ data });
+  },
+  smsVerify: async (req: Request, res: Response) => {
+    const { phone, code } = req.body;
+    const data = await smsVerify(phone, code);
+    console.log('WRONG ANSWER', data);
+    if (data?.status === 'pending') {
+      return res.status(400).json({ message: 'Ошибка при вводе кода. Попробуйте снова' });
+    }
+
+
+    const password = phone + 'secret pass'
+    const passwordHash = await bcrypt.hash(password, 12)
+
+    const user = await User.findOne({ account: phone })
+
+    if (user) {
+      loginUser(user, password, res)
+    } else {
+      const newUser = new User({
+        account: phone, passwordHash, name: 'Anonym', loginType: 'number', isActive: true,
+      });
+      await newUser.save()
+
+      const accessToken = token.accessToken({ id: newUser.id });
+      const refreshToken = token.refreshToken({ id: newUser.id });
+
+      res.cookie('refreshtoken', refreshToken, {
+        httpOnly: true,
+        path: '/api/refresh_token',
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      });
+
+      return res.status(200).json({ message: 'Вы успешно авторизировались', accessToken, user: userMapper(newUser) });
+    }
+
+    return res.status(200).json({ data });
+  },
 };
 
 const loginUser = async (user: IUser, password: string, res: Response) => {
