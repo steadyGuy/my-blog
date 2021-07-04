@@ -1,12 +1,12 @@
 import { makeStyles, } from '@material-ui/core'
 import { useFormik } from 'formik';
-import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginSMSStart } from '../../redux/actions/AuthActions';
 import { selectAuthDialogState } from '../../redux/selectors';
 import { loginSchemaPhone } from '../../utils/validateAuth';
 import { PromptDialog } from '../global/PromptDialog';
-import { SubmitButton, Input } from './components';
+import { Input } from '../Input';
+import { SubmitButton } from '../SubmitBtn';
 
 const useStyles = makeStyles((theme) => ({
   form: {

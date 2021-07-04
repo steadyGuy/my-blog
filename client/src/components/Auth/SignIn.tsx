@@ -3,10 +3,10 @@ import { makeStyles, InputAdornment, IconButton } from '@material-ui/core'
 import { useFormik } from 'formik';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '../../redux/actions/AuthActions';
-import { Loader } from '../Alert/Loader';
-import { SubmitButton, Input } from './components';
+import { Input } from '../Input';
+import { SubmitButton } from '../SubmitBtn';
 import { validateLogin } from '../../utils/validateAuth';
 
 const useStyles = makeStyles((theme) => ({

@@ -6,7 +6,8 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { validateRegister } from '../../utils/validateAuth';
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/actions/AuthActions';
-import { SubmitButton, Input } from './components';
+import { Input } from '../Input';
+import { SubmitButton } from '../SubmitBtn';
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -82,5 +83,5 @@ export const Register = () => {
       />
       <SubmitButton title={"Sign Up"} />
     </form>
-  )
+  );
 }

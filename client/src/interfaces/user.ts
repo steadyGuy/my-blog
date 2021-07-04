@@ -19,4 +19,5 @@ export interface IUser {
 
 export interface IParams {
   slug: string;
+  page: string;
 }

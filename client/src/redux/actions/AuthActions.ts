@@ -10,7 +10,7 @@ export const login = (userLogin: IUserSignIn) => async (dispatch: Dispatch<UserT
     dispatch(setAlertLoading());
     const data = await postAPI('login', userLogin);
 
-    if (data.error) {
+    if (data?.error) {
       return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
     }
 
@@ -33,7 +33,7 @@ export const register = (userRegister: IUserSignUp) => async (dispatch: Dispatch
     dispatch(setAlertLoading());
     const data = await postAPI('register', userRegister);
 
-    if (data.error) {
+    if (data?.error) {
       return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
     }
 
@@ -89,7 +89,7 @@ export const googleLogin = (tokenId: string) => async (dispatch: Dispatch<UserTy
     dispatch(setAlertLoading());
     const data = await postAPI('google_login', { tokenId });
 
-    if (data.error) {
+    if (data?.error) {
       return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
     }
 
@@ -111,7 +111,7 @@ export const loginSMSStart = (phone: string) => async (dispatch: Dispatch<UserTy
   try {
     dispatch(setAlertLoading());
     const data = await postAPI('login_sms', { phone });
-    if (data.error) {
+    if (data?.error) {
       return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
     }
     dispatch(unsetAlertLoading());
@@ -125,7 +125,7 @@ export const loginSMSEnd = (code: string, phone: string) => async (dispatch: Dis
   try {
     dispatch(setAlertLoading());
     const data = await postAPI('sms_verify', { code, phone });
-    if (data.error) {
+    if (data?.error) {
       dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
       return dispatch({ type: AUTH_SMS_DIALOG, payload: true });
     }

@@ -3,13 +3,22 @@ import React, { FC, useState } from 'react'
 import { deepPurple } from '@material-ui/core/colors';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { IUser } from '../../interfaces/user';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) => ({
   menu: {
     marginTop: theme.spacing(1),
   },
   menuItem: {
-    borderBottom: `solid 1px ${theme.palette.grey[100]}`
+    borderBottom: `solid 1px ${theme.palette.grey[100]}`,
+    '& > a': {
+      textDecoration: 'none',
+      padding: '2px 25px',
+      color: theme.palette.secondary.main,
+    },
+    '&:last-child': {
+      borderBottom: `none`,
+    },
   },
   avatart: {
     color: theme.palette.getContrastText(deepPurple[500]),
@@ -27,7 +36,7 @@ type MenuProps = {
 
 const DropDownMenu: FC<MenuProps> = ({ user, handleLogout }) => {
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -68,10 +77,14 @@ const DropDownMenu: FC<MenuProps> = ({ user, handleLogout }) => {
         onClose={handleClose}
         className={classes.menu}
       >
-        <MenuItem className={classes.menuItem}>Профиль</MenuItem>
-        <MenuItem onClick={handleLogout}>Выйти</MenuItem>
+        <MenuItem className={classes.menuItem}>
+          <Link to={`/profile/${user?.id}`}>Профиль</Link>
+        </MenuItem>
+        <MenuItem className={classes.menuItem}>
+          <Link to={'/'} onClick={handleLogout}>Выйти</Link>
+        </MenuItem>
       </Menu>
-    </div>
+    </div >
   );
 }
 
