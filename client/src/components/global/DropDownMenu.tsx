@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderBottom: `none`,
     },
   },
-  avatart: {
+  avatar: {
     color: theme.palette.getContrastText(deepPurple[500]),
     backgroundColor: deepPurple[500],
     marginLeft: theme.spacing(1),
@@ -57,7 +57,7 @@ const DropDownMenu: FC<MenuProps> = ({ user, handleLogout }) => {
         endIcon={<ArrowDropDownIcon />}
       >
         {user.name.length > 8 ? user.name.slice(0, 8) + '...' : user.name}
-        <Avatar className={classes.avatart}>{user.name[0].toUpperCase()}</Avatar>
+        <Avatar className={classes.avatar}>{user.name[0].toUpperCase()}</Avatar>
       </Button>
       <Menu
         elevation={1}

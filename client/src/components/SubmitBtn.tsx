@@ -3,6 +3,11 @@ import { FC } from 'react'
 
 type ButtonProps = {
   title: string;
+  color?: string;
+  type?: string;
+  fullWidth?: boolean;
+  className?: string;
+  disabled?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -11,17 +16,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const SubmitButton: FC<ButtonProps> = ({ title }) => {
+export const SubmitButton: FC<ButtonProps> = ({ title, type = 'submit', color = 'primary', fullWidth = true, ...props }) => {
   const classes = useStyles();
 
   return (
     <Button
-      type="submit"
+      type={type}
       className={classes.submit}
-      fullWidth
+      fullWidth={fullWidth}
       size="large"
       variant="contained"
-      color="primary"
+      color={color}
+      {...props}
     >
       {title}
     </Button>

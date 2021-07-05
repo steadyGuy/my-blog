@@ -1,4 +1,4 @@
-import { IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core';
+import { Box, IconButton, InputAdornment, makeStyles, Theme, Typography } from '@material-ui/core';
 import { useFormik } from 'formik';
 import React, { useState } from 'react'
 import { validateRegister } from '../../../utils/validateAuth';
@@ -9,6 +9,7 @@ import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { SubmitButton } from '../../SubmitBtn';
 import { useSelector } from 'react-redux';
 import { selectAuth } from '../../../redux/selectors';
+import { compare } from '../../../utils/compareObjectByValues';
 
 const useStyles = makeStyles((theme: Theme) => ({
   form: {
@@ -29,6 +30,12 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: `0 ${theme.spacing(2.5)}px`,
       top: -theme.typography.fontSize / 2 - 2, // where - 2 is the size of headerLine (2px)
     }
+  },
+  button: {
+    width: theme.spacing(20),
+    '&:last-child': {
+      marginLeft: theme.spacing(3),
+    }
   }
 }));
 
@@ -36,19 +43,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 export const Personal = () => {
   const classes = useStyles();
   const auth = useSelector(selectAuth);
+
+  const initialState = {
+    name: auth.user?.name,
+    account: auth.user?.account,
+    password: '',
+    passwordConfirm: '',
+  };
+
+  console.log(initialState, 'initialState');
+
   const formik = useFormik({
     validateOnChange: false,
-    initialValues: {
-      name: auth.user?.name,
-      account: auth.user?.account,
-      password: '',
-      passwordConfirm: '',
-    },
+    initialValues: initialState,
     validationSchema: validateRegister(),
     onSubmit: values => {
       // dispatch(register(values))
     },
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
@@ -103,7 +116,22 @@ export const Personal = () => {
               </InputAdornment>
           }}
         />
-        <SubmitButton title={"Sign Up"} />
+        <Box display="flex" justifyContent="flex-end" pb={4} mt={2} mr={2}>
+          <SubmitButton
+            className={classes.button}
+            color="default"
+            fullWidth={false}
+            title={"Cancel"}
+            disabled={compare(initialState, formik.values)}
+          />
+          <SubmitButton
+            className={classes.button}
+            color="primary"
+            fullWidth={false}
+            title={"Update"}
+            disabled={compare(initialState, formik.values)}
+          />
+        </Box>
       </form>
     </>
   )
