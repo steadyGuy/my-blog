@@ -10,16 +10,18 @@ type InputProps = {
   type?: string;
   autoComplete?: string;
   placeholder?: string;
+  fullWidth?: boolean;
+  className?: string;
 }
 
-export const Input: FC<InputProps> = ({ formik, autoFocus = false, name, label, ...props }) => {
+export const Input: FC<InputProps> = ({ formik, fullWidth = true, autoFocus = false, name, label, ...props }) => {
   return (
     <TextField
       error={!!formik.errors[name] && !!formik.touched[name]}
       variant="outlined"
       margin="normal"
       required
-      fullWidth
+      fullWidth={fullWidth}
       id={name}
       label={label}
       name={name}

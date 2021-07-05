@@ -1,13 +1,14 @@
-import { Button, makeStyles, Theme } from '@material-ui/core'
+import { Button, makeStyles, PropTypes, Theme } from '@material-ui/core'
 import { FC } from 'react'
 
 type ButtonProps = {
   title: string;
-  color?: string;
+  color?: PropTypes.Color;
   type?: string;
   fullWidth?: boolean;
   className?: string;
   disabled?: boolean;
+  onClick?: any;
 }
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -16,17 +17,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export const SubmitButton: FC<ButtonProps> = ({ title, type = 'submit', color = 'primary', fullWidth = true, ...props }) => {
+export const SubmitButton: FC<ButtonProps> = ({ className, title, onClick, type = 'submit', color = 'primary', fullWidth = true, ...props }) => {
   const classes = useStyles();
 
   return (
     <Button
       type={type}
-      className={classes.submit}
+      className={className}
       fullWidth={fullWidth}
       size="large"
       variant="contained"
       color={color}
+      onClick={onClick}
       {...props}
     >
       {title}

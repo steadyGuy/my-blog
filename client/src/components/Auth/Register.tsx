@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
   form: {
     marginTop: theme.spacing(1),
   },
+  submit: {
+    margin: theme.spacing(3, 0, 1),
+  },
 }));
 
 export const Register = () => {
@@ -81,7 +84,7 @@ export const Register = () => {
             </InputAdornment>
         }}
       />
-      <SubmitButton title={"Sign Up"} />
+      <SubmitButton className={classes.submit} title={"Sign Up"} />
     </form>
   );
 }

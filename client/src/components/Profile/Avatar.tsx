@@ -1,11 +1,13 @@
 import { Avatar as MuiAvatar, Box, makeStyles, Theme } from '@material-ui/core'
 import clsx from 'clsx';
-import { ChangeEvent, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth } from '../../redux/selectors';
 import { Caption } from './Caption';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { deepPurple } from '@material-ui/core/colors';
+import { SubmitButton } from '../SubmitBtn';
+import { updateAvatar } from '../../redux/actions/ProfileActions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   large: {
@@ -39,12 +41,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     zIndex: 1,
     '&:hover': {
       '& + .MuiAvatar-root': {
-        opacity: 0.5,
         borderColor: deepPurple[500],
       },
       '& ~ .MuiSvgIcon-root': {
         opacity: 1,
-      }
+      },
+    },
+    '&:active': {
+      '& + .MuiAvatar-root': {
+        borderColor: deepPurple[300],
+      },
+    },
+    '&:focus': {
+      '& + .MuiAvatar-root': {
+        borderColor: deepPurple[300],
+      },
     },
   },
   uploadIcon: {
@@ -64,7 +75,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const Avatar = () => {
   const classes = useStyles();
-  const [avatar, setAvatar] = useState<string>('');
+  const [avatar, setAvatar] = useState<{ url: string, file: File | null }>({ url: '', file: null });
+  const dispatch = useDispatch();
   const auth = useSelector(selectAuth);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -72,18 +84,25 @@ export const Avatar = () => {
 
     if (files) {
       const file = files[0];
-      if (avatar) URL.revokeObjectURL(avatar);
-      setAvatar(URL.createObjectURL(file));
+      if (avatar) URL.revokeObjectURL(avatar.url);
+      setAvatar({ url: URL.createObjectURL(file), file });
+    }
+  }
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (avatar) {
+      dispatch(updateAvatar(avatar.file, auth));
     }
 
-    console.log(files)
   }
 
   return (
     <>
       <Caption title="My profile picture" description="Add a photo of you to be easily recognized" />
-      <form>
-        <Box pb={7} className={classes.wrapper}>
+      <form onSubmit={handleSubmit}>
+        <Box pb={3} className={classes.wrapper}>
           <input
             accept="image/*"
             className={classes.input}
@@ -94,11 +113,18 @@ export const Avatar = () => {
           />
           <MuiAvatar
             alt={`${auth?.user?.name[0].toUpperCase()}${auth?.user?.name}`}
-            src={avatar ? avatar : auth?.user?.avatar}
+            src={avatar.url ? avatar.url : auth?.user?.avatar}
             className={clsx(classes.large, classes.avatar)}
           />
           <CloudUploadIcon className={classes.uploadIcon} />
         </Box>
+        {avatar.url &&
+          <Box ml={4} mr={4} pb={4}>
+            <SubmitButton
+              color="primary"
+              title={"Save"}
+            />
+          </Box>}
       </form>
     </>
   )

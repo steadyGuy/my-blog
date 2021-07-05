@@ -14,6 +14,9 @@ import { compare } from '../../../utils/compareObjectByValues';
 const useStyles = makeStyles((theme: Theme) => ({
   form: {
     marginTop: theme.spacing(5),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
   },
   headerLine: {
     margin: `${theme.spacing(2)}px 0`,
@@ -36,9 +39,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:last-child': {
       marginLeft: theme.spacing(3),
     }
+  },
+  inputLabel: {
+    marginRight: theme.spacing(4),
+    marginLeft: theme.spacing(4),
+    width: '25%',
+  },
+  input: {
+    marginRight: theme.spacing(4),
+  },
+  inputWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: theme.spacing(2),
   }
 }));
-
 
 export const Personal = () => {
   const classes = useStyles();
@@ -51,7 +67,10 @@ export const Personal = () => {
     passwordConfirm: '',
   };
 
-  console.log(initialState, 'initialState');
+  const handleCancelSave = () => {
+    const conf = globalThis.confirm('Вы уверены, что хотите отменить все изменения?');
+    conf && formik.setValues(initialState);
+  }
 
   const formik = useFormik({
     validateOnChange: false,
@@ -73,49 +92,72 @@ export const Personal = () => {
     <>
       <Caption title="Персональные" description="Customize view and extra actions" />
       <form noValidate onSubmit={formik.handleSubmit} className={classes.form}>
-        <div className={classes.headerLine}>
+        <Box className={classes.headerLine}>
           <Typography variant="body2">General settings</Typography>
-        </div>
-        <Input formik={formik} label="Name" autoFocus name="name" />
-        <Input formik={formik} label="Email / Phone Number" name="account" />
-        <Input
-          formik={formik}
-          label="Password"
-          name="password"
-          type={showPassword ? 'text' : 'password'}
-          autoComplete="current-password"
-          InputProps={{
-            endAdornment:
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPassword(prev => !prev)}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-          }}
-        />
-        <Input
-          formik={formik}
-          label="Confirm password"
-          name="passwordConfirm"
-          type={showPasswordConfirm ? 'text' : 'password'}
-          autoComplete="current-password"
-          InputProps={{
-            endAdornment:
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={() => setShowPasswordConfirm(prev => !prev)}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPasswordConfirm ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-          }}
-        />
+        </Box>
+        <Box className={classes.inputWrapper}>
+          <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>Name</Typography>
+          <Input className={classes.input} fullWidth={true} formik={formik} label="Name" autoFocus name="name" />
+        </Box>
+
+        <Box className={classes.inputWrapper}>
+          <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>Email</Typography>
+          <Input className={classes.input} formik={formik} label="Email / Phone Number" name="account" />
+        </Box>
+
+
+        <Box className={classes.headerLine}>
+          <Typography variant="body2">Password Change</Typography>
+        </Box>
+
+        <Box className={classes.inputWrapper}>
+          <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>Пароль</Typography>
+          <Input
+            formik={formik}
+            label="Старый пароль"
+            name="password"
+            type={showPassword ? 'text' : 'password'}
+            autoComplete="current-password"
+            className={classes.input}
+            InputProps={{
+              endAdornment:
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPassword(prev => !prev)}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+            }}
+          />
+        </Box>
+
+        <Box className={classes.inputWrapper}>
+          <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>Новый пароль</Typography>
+          <Input
+            formik={formik}
+            label="Новый пароль"
+            name="passwordConfirm"
+            type={showPasswordConfirm ? 'text' : 'password'}
+            autoComplete="current-password"
+            className={classes.input}
+            InputProps={{
+              endAdornment:
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={() => setShowPasswordConfirm(prev => !prev)}
+                    onMouseDown={handleMouseDownPassword}
+                  >
+                    {showPasswordConfirm ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+            }}
+          />
+        </Box>
+
         <Box display="flex" justifyContent="flex-end" pb={4} mt={2} mr={2}>
           <SubmitButton
             className={classes.button}
@@ -123,6 +165,7 @@ export const Personal = () => {
             fullWidth={false}
             title={"Cancel"}
             disabled={compare(initialState, formik.values)}
+            onClick={handleCancelSave}
           />
           <SubmitButton
             className={classes.button}
