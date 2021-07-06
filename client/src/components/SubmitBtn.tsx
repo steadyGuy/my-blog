@@ -4,7 +4,7 @@ import { FC } from 'react'
 type ButtonProps = {
   title: string;
   color?: PropTypes.Color;
-  type?: string;
+  type?: "submit" | "button" | "reset" | undefined;
   fullWidth?: boolean;
   className?: string;
   disabled?: boolean;

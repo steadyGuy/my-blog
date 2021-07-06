@@ -1,5 +1,7 @@
 import express from 'express';
 import AuthController from './controllers/AuthController';
+import UserController from './controllers/UserController';
+import { auth } from './middleware/auth';
 import validator from './middleware/valid';
 
 const router = express.Router();
@@ -17,5 +19,7 @@ router.get('/logout', AuthController.logout);
 
 router.post('/active', AuthController.activateAccount);
 router.get('/refresh_token', AuthController.refreshToken);
+
+router.patch('/user/:stuffToUpdate', auth, UserController.updateUser);
 
 export default router;

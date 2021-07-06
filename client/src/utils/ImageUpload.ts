@@ -35,7 +35,6 @@ export const imageUpload = async (file: File) => {
       body: formData,
     });
     const data = await res.json();
-    debugger;
     return { public_id: data.public_id, url: data.secure_url };
   } catch (err) {
     return err;

@@ -94,6 +94,7 @@ export const Avatar = () => {
 
     if (avatar) {
       dispatch(updateAvatar(avatar.file, auth));
+      setAvatar({ url: '', file: null });
     }
 
   }

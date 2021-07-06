@@ -57,7 +57,11 @@ const DropDownMenu: FC<MenuProps> = ({ user, handleLogout }) => {
         endIcon={<ArrowDropDownIcon />}
       >
         {user.name.length > 8 ? user.name.slice(0, 8) + '...' : user.name}
-        <Avatar className={classes.avatar}>{user.name[0].toUpperCase()}</Avatar>
+        <Avatar
+          alt={`${user?.name[0].toUpperCase()}${user?.name}`}
+          src={user.avatar}
+          className={classes.avatar}
+        />
       </Button>
       <Menu
         elevation={1}
