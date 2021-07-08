@@ -27,6 +27,7 @@ export const SignIn = () => {
     initialValues: {
       account: '',
       password: '',
+      loginType: 'email',
     },
     validationSchema: validateLogin(),
     onSubmit: values => {

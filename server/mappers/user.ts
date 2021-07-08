@@ -8,5 +8,6 @@ export default function userMapper(user: IUser) {
     avatar: user.avatar,
     role: user.role,
     isActive: user.isActive,
+    loginType: user.loginType,
   };
 };

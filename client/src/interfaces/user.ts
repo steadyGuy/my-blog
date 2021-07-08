@@ -15,6 +15,7 @@ export interface IUser {
   isActive: boolean;
   name: string;
   role: string;
+  loginType: string;
 }
 
 export interface IParams {

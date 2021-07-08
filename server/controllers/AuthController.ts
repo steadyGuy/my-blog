@@ -73,14 +73,13 @@ const AuthController = {
   login: async (req: Request, res: Response): Promise<any> => {
     try {
       const { account, password } = req.body;
-
       const user = await User.findOne({ account });
 
       if (!user) {
         return res.status(400).json({ message: 'Такого пользователя не существует' });
       }
 
-      loginUser(user, password, res);
+      loginUser(res, user, 'email', password);
     } catch (err) {
       return res.status(500).json({ message: err.message });
     }
@@ -129,7 +128,7 @@ const AuthController = {
       const user = await User.findOne({ account: email });
 
       if (user) {
-        loginUser(user, password, res);
+        loginUser(res, user, 'social');
       } else {
         const newUser = new User({
           account: email, passwordHash, name, loginType: 'social', avatart: picture, isActive: true,
@@ -173,7 +172,7 @@ const AuthController = {
     const user = await User.findOne({ account: phone })
 
     if (user) {
-      loginUser(user, password, res)
+      loginUser(res, user, 'number');
     } else {
       const newUser = new User({
         account: phone, passwordHash, name: 'Anonym', loginType: 'number', isActive: true,
@@ -196,10 +195,18 @@ const AuthController = {
   },
 };
 
-const loginUser = async (user: IUser, password: string, res: Response) => {
-  const passwordOk = await bcrypt.compare(password, user.passwordHash);
-  if (!passwordOk) {
-    return res.status(400).json({ message: 'Пароль неверен' });
+const loginUser = async (res: Response, user: IUser, loginType: 'number' | 'social' | 'email' = 'email', password = '') => {
+
+  if (loginType === 'email') {
+    const passwordOk = await bcrypt.compare(password, user.passwordHash);
+    if (!passwordOk) {
+      return res.status(400).json({ message: 'Пароль неверен' });
+    }
+  }
+
+  const updatedUser = await User.findOneAndUpdate({ _id: user.id }, { loginType }, { new: true });
+  if (!updatedUser) {
+    return res.status(400).json({ message: 'Не удалось обновить тип логина' });
   }
 
   const accessToken = token.accessToken({ id: user.id });
@@ -210,8 +217,9 @@ const loginUser = async (user: IUser, password: string, res: Response) => {
     path: '/api/refresh_token',
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
-
-  return res.status(200).json({ message: 'Вы успешно авторизировались', accessToken, user: userMapper(user) });
+  console.log('loginTypeloginTypeloginType', loginType)
+  console.log(updatedUser)
+  return res.status(200).json({ message: 'Вы успешно авторизировались', accessToken, user: userMapper(updatedUser) });
 }
 
 export default AuthController;

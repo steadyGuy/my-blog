@@ -26,6 +26,7 @@ export const SignInSMS = () => {
     validateOnChange: false,
     initialValues: {
       phone: '',
+      loginType: 'number',
     },
     validationSchema: loginSchemaPhone(),
     onSubmit: values => {

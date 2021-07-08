@@ -21,5 +21,6 @@ router.post('/active', AuthController.activateAccount);
 router.get('/refresh_token', AuthController.refreshToken);
 
 router.patch('/user/:stuffToUpdate', auth, UserController.updateUser);
+router.patch('/reset_password', auth, UserController.resetPassword);
 
 export default router;

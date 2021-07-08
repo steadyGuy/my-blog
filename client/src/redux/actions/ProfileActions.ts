@@ -1,5 +1,5 @@
 import { Dispatch } from 'redux';
-import { patchAPI } from '../../utils/fetchData';
+import { patchAPI, postAPI } from '../../utils/fetchData';
 import { checkImage, imageUpload } from '../../utils/ImageUpload';
 import { ALERT, IAlertActionSet } from '../constants/alertType';
 import { IAuthReturned, UPDATE_USER_AVATAR, UserTypeActions } from '../constants/authType';
@@ -37,6 +37,28 @@ export const updateAvatar = (
       type: UPDATE_USER_AVATAR,
       payload: { avatar: url },
     });
+    dispatch(unsetAlertLoading());
+    dispatch(setAlertSuccess(message));
+
+  } catch (err) {
+    dispatch({ type: ALERT, payload: { errors: err.message } });
+  }
+}
+
+export const resetPassword = (
+  password: string, newPassword: string, accessToken: string
+) => async (dispatch: Dispatch<IAlertActionSet | UserTypeActions>) => {
+  try {
+    dispatch(setAlertLoading());
+    const { error, message } = await patchAPI('reset_password', {
+      password, newPassword
+    }, accessToken);
+
+    if (error) {
+      return dispatch({ type: ALERT, payload: { errors: error.message, loading: false } });
+    }
+
+
     dispatch(unsetAlertLoading());
     dispatch(setAlertSuccess(message));
 

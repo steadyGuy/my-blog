@@ -34,6 +34,19 @@ export const validateRegister = () => {
   });
 }
 
+export const validatePasswords = () => {
+  return yup.object({
+    newPassword: yup.string()
+      .required('Обязательно при заполнении')
+      .max(20, 'Must be 20 characters or less')
+      .min(4, 'Must be at least 4 characters'),
+    password: yup.string()
+      .required('Обязательно при заполнении')
+      .max(20, 'Must be 20 characters or less')
+      .min(4, 'Must be at least 4 characters'),
+  });
+}
+
 export const loginSchemaPhone = () => {
   return yup.object({
     phone: yup.string()
