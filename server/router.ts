@@ -1,5 +1,6 @@
 import express from 'express';
 import AuthController from './controllers/AuthController';
+import CategoryController from './controllers/CategoryController';
 import UserController from './controllers/UserController';
 import { auth } from './middleware/auth';
 import validator from './middleware/valid';
@@ -22,5 +23,13 @@ router.get('/refresh_token', AuthController.refreshToken);
 
 router.patch('/user/:stuffToUpdate', auth, UserController.updateUser);
 router.patch('/reset_password', auth, UserController.resetPassword);
+
+router.route('/category')
+  .post(auth, CategoryController.createCategory)
+  .get(CategoryController.getCategories);
+
+router.route('/category/:id')
+  .patch(auth, CategoryController.updateCategory)
+  .delete(auth, CategoryController.deleteCategory)
 
 export default router;
