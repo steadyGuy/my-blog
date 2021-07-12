@@ -1,9 +1,6 @@
-import { AppBar, Button, Theme, makeStyles, Link, Toolbar, Typography } from '@material-ui/core';
-import React from 'react'
+import { AppBar, Container, Theme, makeStyles, Link, Toolbar, Typography } from '@material-ui/core';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
-import Menu from './DropDownMenu';
 import Search from './Search';
-import MenuIcon from '@material-ui/icons/Menu';
 import DropDownMenu from './DropDownMenu';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth } from '../../redux/selectors';
@@ -51,29 +48,40 @@ const Header = () => {
 
   return (
     <AppBar color="default" position="static" elevation={0}>
-      <Toolbar>
-        <Typography variant="h6" align='left'>
-          Logo
-        </Typography>
-        <Toolbar component="nav" variant="dense" className={classes.navigation}>
-          123
+      <Container>
+        <Toolbar disableGutters>
+          <Typography variant="h6" align='left'>
+            Logo
+          </Typography>
+          <Toolbar component="nav" variant="dense" className={classes.navigation}>
+            123
+          </Toolbar>
+          <Search />
+          {userLinks.map((link, i) => (
+            <Link
+              className={classes.link}
+              component={RouterLink}
+              key={i}
+              to={link.path}
+              color={isActive(link.path) ? 'secondary' : 'textSecondary'}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          {auth.user?.role === 'admin' &&
+            <Link
+              className={classes.link}
+              component={RouterLink}
+              to="/category"
+              color={isActive('/category') ? 'secondary' : 'textSecondary'}
+            >
+              Категории
+            </Link>}
+
+          {auth.user && <DropDownMenu handleLogout={handleLogout} user={auth.user} />}
         </Toolbar>
-        <Search />
-        {userLinks.map((link, i) => (
-          <Link
-            className={classes.link}
-            component={RouterLink}
-            key={i}
-            to={link.path}
-            color={isActive(link.path) ? 'secondary' : 'textSecondary'}
-          >
-            {link.label}
-          </Link>
-        ))}
-
-
-        {auth.user && <DropDownMenu handleLogout={handleLogout} user={auth.user} />}
-      </Toolbar>
+      </Container>
     </AppBar>
   )
 }

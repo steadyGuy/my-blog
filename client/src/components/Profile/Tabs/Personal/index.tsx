@@ -1,11 +1,9 @@
-import { Box, IconButton, InputAdornment, Typography } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import { useFormik } from 'formik';
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { validatePasswords, validateRegister } from '../../../../utils/validateAuth';
-import { Input } from '../../../Input';
+import { Input, InputStyled } from '../../../Input';
 import { Caption } from '../../Caption'
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { SubmitButton } from '../../../SubmitBtn';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth } from '../../../../redux/selectors';
@@ -27,9 +25,9 @@ export const Personal = () => {
     name: auth.user?.name,
   };
 
-  const accountState = {
-    account: auth.user?.account,
-  };
+  // const accountState = {
+  //   account: auth.user?.account,
+  // };
 
   const fPasswords = useFormik({
     validateOnChange: false,
@@ -69,22 +67,15 @@ export const Personal = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
   return (
     <>
       <Caption title="Персональные" description="Customize view and extra actions" />
       <Box className={classes.formWrapper}>
         <form>
-          <Box className={classes.headerLine}>
-            <Typography variant="body2">General settings</Typography>
-          </Box>
-          <Box className={classes.inputWrapper}>
-            <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>Name</Typography>
+
+          <InputStyled title="Общие настройки" inputTitle="Имя">
             <Input className={classes.input} fullWidth={true} formik={fCustomFields} label="Name" autoFocus name="name" />
-          </Box>
+          </InputStyled>
 
           {/* <Box className={classes.inputWrapper}>
             <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>Email</Typography>
@@ -111,12 +102,7 @@ export const Personal = () => {
         </form>
         {auth.user?.loginType === 'email' &&
           <form noValidate onSubmit={fPasswords.handleSubmit} className={classes.formWrapper}>
-            <Box className={classes.headerLine}>
-              <Typography variant="body2">Password Change</Typography>
-            </Box>
-
-            <Box className={classes.inputWrapper}>
-              <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>Пароль</Typography>
+            <InputStyled title="Password Change" inputTitle="Пароль">
               <Input
                 formik={fPasswords}
                 label="Старый пароль"
@@ -124,23 +110,13 @@ export const Personal = () => {
                 type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 className={classes.input}
-                InputProps={{
-                  endAdornment:
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowPassword(prev => !prev)}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                }}
+                showPassword={showPassword}
+                setShowPassword={setShowPassword}
+                withPassword={true}
               />
-            </Box>
+            </InputStyled>
 
-            <Box className={classes.inputWrapper}>
-              <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>Новый пароль</Typography>
+            <InputStyled inputTitle="Новый пароль">
               <Input
                 formik={fPasswords}
                 label="Новый пароль"
@@ -148,20 +124,11 @@ export const Personal = () => {
                 type={showNewPassword ? 'text' : 'password'}
                 autoComplete="current-password"
                 className={classes.input}
-                InputProps={{
-                  endAdornment:
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={() => setShowNewPassword(prev => !prev)}
-                        onMouseDown={handleMouseDownPassword}
-                      >
-                        {showNewPassword ? <Visibility /> : <VisibilityOff />}
-                      </IconButton>
-                    </InputAdornment>
-                }}
+                showPassword={showNewPassword}
+                setShowPassword={setShowNewPassword}
+                withPassword={true}
               />
-            </Box>
+            </InputStyled>
 
             <Box display="flex" justifyContent="flex-end" pb={4} mt={2} mr={2}>
               <SubmitButton

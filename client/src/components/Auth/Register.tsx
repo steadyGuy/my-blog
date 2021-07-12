@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
-import { makeStyles, InputAdornment, IconButton } from '@material-ui/core'
+import { useState } from 'react';
+import { makeStyles } from '@material-ui/core'
 import { useFormik } from 'formik';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { validateRegister } from '../../utils/validateAuth';
 import { useDispatch } from 'react-redux';
 import { register } from '../../redux/actions/AuthActions';
@@ -38,10 +36,6 @@ export const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
   return (
     <form noValidate onSubmit={formik.handleSubmit} className={classes.form}>
       <Input formik={formik} label="Name" autoFocus name="name" />
@@ -52,18 +46,9 @@ export const Register = () => {
         name="password"
         type={showPassword ? 'text' : 'password'}
         autoComplete="current-password"
-        InputProps={{
-          endAdornment:
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowPassword(prev => !prev)}
-                onMouseDown={handleMouseDownPassword}
-              >
-                {showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-        }}
+        showPassword={showPassword}
+        setShowPassword={setShowPassword}
+        withPassword={true}
       />
       <Input
         formik={formik}
@@ -71,18 +56,9 @@ export const Register = () => {
         name="passwordConfirm"
         type={showPasswordConfirm ? 'text' : 'password'}
         autoComplete="current-password"
-        InputProps={{
-          endAdornment:
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowPasswordConfirm(prev => !prev)}
-                onMouseDown={handleMouseDownPassword}
-              >
-                {showPasswordConfirm ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-        }}
+        showPassword={showPasswordConfirm}
+        setShowPassword={setShowPasswordConfirm}
+        withPassword={true}
       />
       <SubmitButton className={classes.submit} title={"Sign Up"} />
     </form>

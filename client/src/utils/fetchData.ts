@@ -3,7 +3,7 @@ import axios from '../core/axios';
 export const postAPI = async (url: string, form: object, token?: string): Promise<any> => {
   try {
     const { data } = await axios.post(`/${url}`, form, {
-      headers: { Authorization: 'Bearer' + token, }
+      headers: { Authorization: 'Bearer ' + token, }
     });
     return data;
   } catch (err) {
@@ -17,7 +17,7 @@ export const postAPI = async (url: string, form: object, token?: string): Promis
 export const getAPI = async (url: string, token?: string): Promise<any> => {
   try {
     const { data } = await axios.get(`/${url}`, {
-      headers: { Authorization: 'Bearer' + token, }
+      headers: { Authorization: 'Bearer ' + token, }
     });
     return data;
   } catch (err) {

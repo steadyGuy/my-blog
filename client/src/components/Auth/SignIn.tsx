@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { makeStyles, InputAdornment, IconButton } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core'
 import { useFormik } from 'formik';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { useDispatch } from 'react-redux';
 import { login } from '../../redux/actions/AuthActions';
 import { Input } from '../Input';
@@ -36,10 +34,6 @@ export const SignIn = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
-
   return (
     <form noValidate onSubmit={formik.handleSubmit} className={classes.form}>
       <Input formik={formik} label="Email / Phone Number" autoFocus name="account" />
@@ -49,18 +43,9 @@ export const SignIn = () => {
         name="password"
         type={showPassword ? 'text' : 'password'}
         autoComplete="current-password"
-        InputProps={{
-          endAdornment:
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={() => setShowPassword(prev => !prev)}
-                onMouseDown={handleMouseDownPassword}
-              >
-                {showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-        }}
+        showPassword={showPassword}
+        setShowPassword={setShowPassword}
+        withPassword={true}
       />
       <SubmitButton className={classes.submit} title={"Sign In"} />
     </form>

@@ -1,3 +1,4 @@
+import { Container, CssBaseline } from '@material-ui/core';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
@@ -15,16 +16,19 @@ function App() {
 
   return (
     <>
+      <CssBaseline />
       <Router>
         <Alert />
         <Header />
-        <Switch>
-          <Route exact path="/" component={PageRender} />
-          <Route exact path="/:page" component={PageRender} />
-          <Route exact path="/:page/:slug" component={PageRender} />
-        </Switch>
+        <Container>
+          <Switch>
+            <Route exact path="/" component={PageRender} />
+            <Route exact path="/:page" component={PageRender} />
+            <Route exact path="/:page/:slug" component={PageRender} />
+          </Switch>
+          <Footer />
+        </Container>
       </Router>
-      <Footer />
     </>
   );
 }
