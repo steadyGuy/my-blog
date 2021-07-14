@@ -1,9 +1,11 @@
 import { Box, createStyles, makeStyles, Typography, Theme, Button } from '@material-ui/core'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import AddCategoryDialog from '../components/Category/AddCategoryDialog';
+import { CategoriesTable } from '../components/Category/CategoriesTable';
 import NotFound from '../components/global/NotFound/NotFound';
-import { selectAuth } from '../redux/selectors';
+import { getCategories } from '../redux/actions/CategoryAction';
+import { selectAuth, selectCategories } from '../redux/selectors';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -32,6 +34,12 @@ const Category = () => {
   const dispatch = useDispatch();
   const auth = useSelector(selectAuth);
 
+  useEffect(() => {
+
+    dispatch(getCategories());
+
+  }, [dispatch])
+
   if (auth.user?.role !== 'admin') {
     return <NotFound />
   }
@@ -51,6 +59,7 @@ const Category = () => {
       >
         Добавить
       </Button>
+      <CategoriesTable />
     </>
   )
 }

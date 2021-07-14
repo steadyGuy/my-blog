@@ -25,7 +25,7 @@ const CategoryController = {
 
       await newCategory.save();
 
-      return res.json({ message: 'Успешно создано', category: newCategory });
+      return res.json({ message: 'Успешно создано', category: categoryMapper(newCategory) });
     } catch (err: any) {
       let errMsg;
 
@@ -38,7 +38,7 @@ const CategoryController = {
   async getCategories(req: Request, res: Response): Promise<any> {
     try {
       const categories = await Category.find().sort('-createdAt');
-      res.json({ category: categories.map(categoryMapper), });
+      res.json({ categories: categories.map(categoryMapper), });
     } catch (err: any) {
       return res.status(500).json({ message: err.message });
     }
