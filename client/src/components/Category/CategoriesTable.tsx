@@ -91,7 +91,7 @@ export const CategoriesTable = () => {
                     <IconButton aria-label="delete" size="small">
                       <DeleteIcon fontSize="small" />
                     </IconButton>
-                    <IconButton aria-label="delete" size="small" onClick={() => handleEdit(category)}>
+                    <IconButton aria-label="edit" size="small" onClick={() => handleEdit(category)}>
                       <EditIcon fontSize="small" />
                     </IconButton>
                   </Box>

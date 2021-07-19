@@ -55,7 +55,7 @@ const AuthController = {
       if (!user) {
         return res.status(400).json({ message: 'Пользователь не был зарегистрирован. Попытайтесь еще раз' });
       }
-      console.log(user)
+      console.log(user);
       if (user.isActive) {
         return res.status(400).json({ message: 'Вы уже подтвердили свой email' });
       }

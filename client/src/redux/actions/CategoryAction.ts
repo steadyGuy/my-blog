@@ -2,7 +2,7 @@ import { Dispatch } from 'redux';
 import { ICategory } from '../../interfaces/category';
 import { getAPI, patchAPI, postAPI } from '../../utils/fetchData';
 import { ALERT, IAlertActionSet } from '../constants/alertType';
-import { CategoryTypeActions, CREATE_CATEGORY, GET_CATEGORIES } from '../constants/categoryType';
+import { CategoryTypeActions, CREATE_CATEGORY, GET_CATEGORIES, UPDATE_CATEGORY } from '../constants/categoryType';
 import { setAlertLoading, setAlertSuccess, unsetAlertLoading } from './AlertAction';
 
 export const createCategory = (
@@ -33,17 +33,18 @@ export const updateCategory = (
   try {
     dispatch(setAlertLoading());
 
-    const { category, error, message } = await patchAPI('category', {
+    const { category, error, message } = await patchAPI(`category/${newCategory.id}`, {
       id: newCategory, name: newCategory.name,
     }, token);
 
     if (error) {
       return dispatch({ type: ALERT, payload: { errors: error.message, loading: false } });
     }
-    dispatch({ type: CREATE_CATEGORY, payload: category });
+
+    dispatch({ type: UPDATE_CATEGORY, payload: newCategory });
+
     dispatch(unsetAlertLoading());
     dispatch(setAlertSuccess(message));
-
   } catch (err) {
     dispatch({ type: ALERT, payload: { errors: err.message } });
   }

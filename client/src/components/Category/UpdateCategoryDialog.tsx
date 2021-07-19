@@ -2,6 +2,9 @@ import { Dialog, DialogTitle, TextField, DialogContent, DialogActions, Button } 
 import { ICategory } from '../../interfaces/category';
 
 import { ChangeEvent, FC, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { updateCategory } from '../../redux/actions/CategoryAction';
+import { selectAuth } from '../../redux/selectors';
 
 type UpdateCategoryDialogProps = {
   open: boolean;
@@ -15,14 +18,19 @@ export const UpdateCategoryDialog: FC<UpdateCategoryDialogProps> = (
 ) => {
 
   const [updatedCategory, setupdatedCategory] = useState<ICategory | null>(null);
+  const dispatch = useDispatch();
+  const auth = useSelector(selectAuth);
 
   useEffect(() => {
-    if (category) {
-      setupdatedCategory(category);
-    }
+    if (category) setupdatedCategory(category);
   }, [category])
 
   const handleUpdate = () => {
+    if (updatedCategory) {
+      debugger;
+      dispatch(updateCategory(updatedCategory, auth.accessToken));
+      debugger;
+    }
     handleClose();
   }
 
@@ -38,7 +46,6 @@ export const UpdateCategoryDialog: FC<UpdateCategoryDialogProps> = (
   return (
     <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-update" maxWidth='sm' fullWidth>
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
-      {console.log('updatedCategory', category)}
       <DialogContent>
         <TextField
           autoFocus
