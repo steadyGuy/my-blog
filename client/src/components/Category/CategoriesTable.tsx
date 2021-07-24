@@ -9,11 +9,12 @@ import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import { Box, IconButton, Paper } from '@material-ui/core';
-import { useSelector } from 'react-redux';
-import { selectCategories } from '../../redux/selectors';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectAuth, selectCategories } from '../../redux/selectors';
 import { useState } from 'react';
 import { ICategory } from '../../interfaces/category';
 import { UpdateCategoryDialog } from './UpdateCategoryDialog';
+import { deleteCategory } from '../../redux/actions/CategoryAction';
 
 const StyledTableCell = withStyles((theme: Theme) =>
   createStyles({
@@ -55,7 +56,8 @@ export const useStyles = makeStyles((theme: Theme) =>
 
 export const CategoriesTable = () => {
   const classes = useStyles();
-
+  const auth = useSelector(selectAuth);
+  const dispatch = useDispatch();
   const categories = useSelector(selectCategories);
   const [edit, setEdit] = useState<ICategory | null>(null);
   const [open, setOpen] = useState(false);
@@ -65,6 +67,13 @@ export const CategoriesTable = () => {
     setOpen(true);
   }
 
+  const handleDelete = (catId: string) => {
+    let agreement = globalThis.confirm('Вы уверены что хотите удалить категорию?');
+    if (agreement) {
+      dispatch(deleteCategory(catId, auth.accessToken))
+    }
+  }
+
   const handleClose = () => {
     setOpen(false);
   }
@@ -72,35 +81,36 @@ export const CategoriesTable = () => {
   return (
     <>
       <UpdateCategoryDialog handleClose={handleClose} open={open} category={edit} title={`Обновить категорию`} />
-      <TableContainer component={Paper} className={classes.wrapper}>
-        <Table className={classes.table} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="left">Имя категории</StyledTableCell>
-              <StyledTableCell align="right">Действие</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {categories.map((category) => (
-              <StyledTableRow key={category.id}>
-                <StyledTableCell scope="row">
-                  {category.name}
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <Box className={classes.actionIcons}>
-                    <IconButton aria-label="delete" size="small">
-                      <DeleteIcon fontSize="small" />
-                    </IconButton>
-                    <IconButton aria-label="edit" size="small" onClick={() => handleEdit(category)}>
-                      <EditIcon fontSize="small" />
-                    </IconButton>
-                  </Box>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {categories.length > 0 &&
+        <TableContainer component={Paper} className={classes.wrapper}>
+          <Table className={classes.table} aria-label="customized table">
+            <TableHead>
+              <TableRow>
+                <StyledTableCell align="left">Имя категории</StyledTableCell>
+                <StyledTableCell align="right">Действие</StyledTableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {categories.map((category) => (
+                <StyledTableRow key={category.id}>
+                  <StyledTableCell scope="row">
+                    {category.name}
+                  </StyledTableCell>
+                  <StyledTableCell align="right">
+                    <Box className={classes.actionIcons}>
+                      <IconButton aria-label="delete" size="small" onClick={() => handleDelete(category.id)}>
+                        <DeleteIcon fontSize="small" />
+                      </IconButton>
+                      <IconButton aria-label="edit" size="small" onClick={() => handleEdit(category)}>
+                        <EditIcon fontSize="small" />
+                      </IconButton>
+                    </Box>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>}
     </>
   )
 }

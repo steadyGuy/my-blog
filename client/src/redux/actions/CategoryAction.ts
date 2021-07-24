@@ -1,68 +1,36 @@
-import { Dispatch } from 'redux';
 import { ICategory } from '../../interfaces/category';
-import { getAPI, patchAPI, postAPI } from '../../utils/fetchData';
-import { ALERT, IAlertActionSet } from '../constants/alertType';
-import { CategoryTypeActions, CREATE_CATEGORY, GET_CATEGORIES, UPDATE_CATEGORY } from '../constants/categoryType';
-import { setAlertLoading, setAlertSuccess, unsetAlertLoading } from './AlertAction';
+import { deleteAPI, getAPI, patchAPI, postAPI } from '../../utils/fetchData';
+import { CREATE_CATEGORY, DELETE_CATEGORY, GET_CATEGORIES, UPDATE_CATEGORY } from '../constants/categoryType';
+import { wrapper } from './hof';
 
-export const createCategory = (
-  name: string, token: string
-) => async (dispatch: Dispatch<IAlertActionSet | CategoryTypeActions>) => {
-  try {
-    dispatch(setAlertLoading());
+export const createCategory = wrapper(async (dispatch, name: string, token: string) => {
+  const { category, error, message } = await postAPI('category', {
+    name,
+  }, token);
 
-    const { category, error, message } = await postAPI('category', {
-      name,
-    }, token);
+  dispatch({ type: CREATE_CATEGORY, payload: category });
+  return { message, error };
+});
 
-    if (error) {
-      return dispatch({ type: ALERT, payload: { errors: error.message, loading: false } });
-    }
-    dispatch({ type: CREATE_CATEGORY, payload: category });
-    dispatch(unsetAlertLoading());
-    dispatch(setAlertSuccess(message));
+export const updateCategory = wrapper(async (dispatch, newCategory: ICategory, token: string) => {
+  const { error, message } = await patchAPI(`category/${newCategory.id}`, {
+    id: newCategory, name: newCategory.name,
+  }, token);
 
-  } catch (err) {
-    dispatch({ type: ALERT, payload: { errors: err.message } });
-  }
-}
+  dispatch({ type: UPDATE_CATEGORY, payload: newCategory });
+  return { message, error };
+});
 
-export const updateCategory = (
-  newCategory: ICategory, token: string
-) => async (dispatch: Dispatch<IAlertActionSet | CategoryTypeActions>) => {
-  try {
-    dispatch(setAlertLoading());
+export const deleteCategory = wrapper(async (dispatch, catId: string, token: string) => {
+  const { error, message } = await deleteAPI(`category/${catId}`, token);
 
-    const { category, error, message } = await patchAPI(`category/${newCategory.id}`, {
-      id: newCategory, name: newCategory.name,
-    }, token);
+  dispatch({ type: DELETE_CATEGORY, payload: catId });
+  return { message, error };
+});
 
-    if (error) {
-      return dispatch({ type: ALERT, payload: { errors: error.message, loading: false } });
-    }
+export const getCategories = wrapper(async (dispatch) => {
+  const { categories, error } = await getAPI('category');
 
-    dispatch({ type: UPDATE_CATEGORY, payload: newCategory });
-
-    dispatch(unsetAlertLoading());
-    dispatch(setAlertSuccess(message));
-  } catch (err) {
-    dispatch({ type: ALERT, payload: { errors: err.message } });
-  }
-}
-
-export const getCategories = () => async (dispatch: Dispatch<IAlertActionSet | CategoryTypeActions>) => {
-  try {
-    dispatch(setAlertLoading());
-
-    const { categories, error } = await getAPI('category');
-
-    if (error) {
-      return dispatch({ type: ALERT, payload: { errors: error.message, loading: false } });
-    }
-
-    dispatch({ type: GET_CATEGORIES, payload: categories });
-    dispatch(unsetAlertLoading());
-  } catch (err) {
-    dispatch({ type: ALERT, payload: { errors: err.message } });
-  }
-}
+  dispatch({ type: GET_CATEGORIES, payload: categories });
+  return { error };
+});

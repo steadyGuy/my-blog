@@ -27,9 +27,7 @@ export const UpdateCategoryDialog: FC<UpdateCategoryDialogProps> = (
 
   const handleUpdate = () => {
     if (updatedCategory) {
-      debugger;
       dispatch(updateCategory(updatedCategory, auth.accessToken));
-      debugger;
     }
     handleClose();
   }

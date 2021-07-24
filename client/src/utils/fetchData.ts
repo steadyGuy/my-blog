@@ -41,3 +41,17 @@ export const patchAPI = async (url: string, form: object, token?: string): Promi
     }
   }
 }
+
+export const deleteAPI = async (url: string, token?: string): Promise<any> => {
+  try {
+    const { data } = await axios.delete(`/${url}`, {
+      headers: { Authorization: 'Bearer ' + token, }
+    });
+    return data;
+  } catch (err) {
+    console.log('Error with auth request', err.message);
+    if (err?.response) {
+      return { error: err.response?.data };
+    }
+  }
+}

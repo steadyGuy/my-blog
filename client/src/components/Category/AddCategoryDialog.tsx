@@ -31,14 +31,13 @@ const AddCategoryDialog: FC<AddCategoryDialogProps> = ({ open, handleClose }) =>
     },
     // validationSchema: validateLogin(),
     onSubmit: values => {
-      console.log(auth.accessToken)
       dispatch(createCategory(values.name, auth.accessToken));
+      handleClose();
     },
   });
 
   const handleSave = () => {
     formik.handleSubmit();
-    handleClose();
   }
 
   return (
