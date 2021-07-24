@@ -1,4 +1,5 @@
 import * as yup from 'yup';
+import { checkImage } from './ImageUpload';
 
 const loginSchema = {
   account: yup.string().test(
@@ -31,6 +32,34 @@ export const validateRegister = () => {
     passwordConfirm: yup.string()
       .required('Required')
       .oneOf([yup.ref('password'),], 'Passwords must match')
+  });
+}
+
+export const validateArticle = () => {
+  return yup.object({
+    category: yup.string()
+      .ensure()
+      .required("Категория обязательна"),
+    title: yup.string()
+      .required('Обязательное поле')
+      .max(50, 'Must be 50 characters or less')
+      .min(10, 'Must be at least 10 characters'),
+    description: yup.string()
+      .required('Обязательное поле')
+      .max(250, 'Must be 250 characters or less')
+      .min(50, 'Must be at least 50 characters'),
+    thumbnail: yup.mixed().test('is-image', '', function (value: File) {
+      const { path, parent, createError } = this;
+      debugger;
+      const msg = checkImage(value);
+      if (msg) {
+        return createError({
+          path,
+          message: msg
+        });
+      }
+      return true;
+    })
   });
 }
 

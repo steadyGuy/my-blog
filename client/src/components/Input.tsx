@@ -49,6 +49,11 @@ type InputProps = {
   showPassword?: boolean;
   setShowPassword?: Dispatch<SetStateAction<boolean>>;
   withPassword?: boolean;
+  accept?: string;
+  helperText?: string;
+  rows?: number;
+  defaultValue?: string;
+  multiline?: boolean;
 }
 
 export const Input: FC<InputProps> = (
@@ -116,7 +121,7 @@ export const InputStyled: FC<InputStyledProps> = ({ children, title, inputTitle 
       }
 
       <Box className={classes.inputWrapper}>
-        <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>{inputTitle}</Typography>
+        {inputTitle && <Typography color="textSecondary" variant="body1" className={classes.inputLabel}>{inputTitle}</Typography>}
         {children}
       </Box>
     </>

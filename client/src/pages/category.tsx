@@ -31,14 +31,7 @@ const Category = () => {
     setOpen(false);
   };
 
-  const dispatch = useDispatch();
   const auth = useSelector(selectAuth);
-
-  useEffect(() => {
-
-    dispatch(getCategories());
-
-  }, [dispatch])
 
   if (auth.user?.role !== 'admin') {
     return <NotFound />

@@ -35,7 +35,7 @@ const Header = () => {
 
   const generalLinks = [
     { label: 'Главная', path: '/', },
-    { label: 'Создать пост ', path: '/create', }
+    { label: 'Создать пост ', path: '/create-article', }
   ];
 
   const userLinks = auth.accessToken ? generalLinks : authLinks;
