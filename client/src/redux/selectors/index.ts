@@ -6,3 +6,4 @@ export const selectAuthDialogState = (state: RootState) => state.auth.dialog;
 export const selectAlert = (state: RootState) => state.alert;
 
 export const selectCategories = (state: RootState) => state.categories;
+export const selectGlobal = (state: RootState) => state.global;

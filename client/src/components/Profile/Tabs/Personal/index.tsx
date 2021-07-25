@@ -1,7 +1,7 @@
 import { Box } from '@material-ui/core';
 import { useFormik } from 'formik';
 import { useState } from 'react'
-import { validatePasswords, validateRegister } from '../../../../utils/validateAuth';
+import { validateName, validatePasswords, validateRegister } from '../../../../utils/validateAuth';
 import { Input, InputStyled } from '../../../Input';
 import { Caption } from '../../Caption'
 import { SubmitButton } from '../../../SubmitBtn';
@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth } from '../../../../redux/selectors';
 import { compare } from '../../../../utils/compareObjectByValues';
 import { useStyles } from './style';
-import { resetPassword } from '../../../../redux/actions/ProfileActions';
+import { resetPassword, updateProfileName } from '../../../../redux/actions/ProfileActions';
 
 export const Personal = () => {
   const classes = useStyles();
@@ -44,9 +44,11 @@ export const Personal = () => {
   const fCustomFields = useFormik({
     validateOnChange: false,
     initialValues: customFieldsState,
-    validationSchema: validateRegister(),
+    validationSchema: validateName(),
     onSubmit: values => {
-      // dispatch(register(values))
+      console.log('DSAFSAF')
+      dispatch(updateProfileName(values.name, auth.accessToken));
+      debugger;
     },
   });
 
@@ -59,9 +61,9 @@ export const Personal = () => {
   //   },
   // });
 
-  const handleCancelSavePasswords = () => {
+  const handleCancelUpdate = (handleCancellation: () => any) => {
     const conf = globalThis.confirm('Вы уверены, что хотите отменить все изменения?');
-    conf && fPasswords.setValues(passwordsState);
+    if (conf) handleCancellation();
   }
 
   const [showPassword, setShowPassword] = useState(false);
@@ -71,7 +73,7 @@ export const Personal = () => {
     <>
       <Caption title="Персональные" description="Customize view and extra actions" />
       <Box className={classes.formWrapper}>
-        <form>
+        <form noValidate onSubmit={fCustomFields.handleSubmit}>
 
           <InputStyled title="Общие настройки" inputTitle="Имя">
             <Input className={classes.input} fullWidth={true} formik={fCustomFields} label="Name" autoFocus name="name" />
@@ -87,16 +89,17 @@ export const Personal = () => {
               className={classes.button}
               color="default"
               fullWidth={false}
-              title={"Cancel"}
-              disabled={compare(passwordsState, fPasswords.values)}
-              onClick={handleCancelSavePasswords}
+              title="Cancel"
+              type="button"
+              disabled={compare(customFieldsState, fCustomFields.values)}
+              onClick={() => handleCancelUpdate(() => fCustomFields.setValues(customFieldsState))}
             />
             <SubmitButton
               className={classes.button}
               color="primary"
               fullWidth={false}
+              disabled={compare(customFieldsState, fCustomFields.values)}
               title={"Update"}
-              disabled={compare(passwordsState, fPasswords.values)}
             />
           </Box>
         </form>
@@ -137,7 +140,7 @@ export const Personal = () => {
                 fullWidth={false}
                 title={"Cancel"}
                 disabled={compare(passwordsState, fPasswords.values)}
-                onClick={handleCancelSavePasswords}
+                onClick={() => handleCancelUpdate(() => fPasswords.setValues(passwordsState))}
               />
               <SubmitButton
                 className={classes.button}

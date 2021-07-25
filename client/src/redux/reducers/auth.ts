@@ -1,4 +1,11 @@
-import { UserTypeActions, IAuthReturned, AUTH_SUCCESS, AUTH_SMS_DIALOG, UPDATE_USER_AVATAR } from '../constants/authType';
+import {
+  UserTypeActions,
+  IAuthReturned,
+  AUTH_SUCCESS,
+  AUTH_SMS_DIALOG,
+  UPDATE_USER_AVATAR,
+  UPDATE_USER_NAME
+} from '../constants/authType';
 
 const initilState: IAuthReturned = {
   user: null,
@@ -19,6 +26,11 @@ export const authReducer = (state = initilState, action: UserTypeActions): IAuth
         ...state,
         user: state.user ? { ...state.user, avatar: action.payload.avatar } : null
       };
+    case UPDATE_USER_NAME:
+      return {
+        ...state,
+        user: state.user ? { ...state.user, name: action.payload } : null
+      }
     default:
       return state;
   }

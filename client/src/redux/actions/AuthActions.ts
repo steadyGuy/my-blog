@@ -56,18 +56,18 @@ export const register = (userRegister: IUserSignUp) => async (dispatch: Dispatch
 
 export const refreshToken = () => async (dispatch: Dispatch<UserTypeActions | IAlertActionSet>) => {
   const logged = localStorage.getItem('logged');
-  if (logged !== 'true') {
-    return;
-  }
+  if (logged !== 'true') return;
   try {
+    dispatch(setAlertLoading());
     const data = await getAPI('refresh_token');
     dispatch({
       type: AUTH_SUCCESS,
       payload: data,
     });
-    // if (data.error) {
-    //   return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
-    // }
+    dispatch(unsetAlertLoading());
+    if (data.error) {
+      return dispatch({ type: ALERT, payload: { errors: data.error.message, loading: false } });
+    }
 
   } catch (err) {
     dispatch({ type: ALERT, payload: { errors: err.message } });

@@ -10,7 +10,7 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
     position: 'fixed',
     top: 0,
     left: 0,
-    backgroundColor: fade('#fff', 0.9),
+    backgroundColor: fade('#fff', 1),
     zIndex: 1000,
   },
 }));

@@ -68,6 +68,30 @@ const UserController = {
       return res.status(500).json({ message: err.message });
     }
   },
+  async updateName(req: IReqAuth, res: Response) {
+    try {
+      if (!req.user) {
+        return res.status(400).json({ message: "Пользователя не существует" });
+      };
+
+      const { name } = req.body;
+
+      const user = await User.findOne({ _id: req.user.id });
+
+      if (!user) {
+        return res.status(400).json({ message: "Пользователя не существует" });
+      }
+
+      await User.updateOne({ _id: req.user.id }, {
+        name
+      });
+
+      return res.status(200).json({ message: "Вы успешно сменили имя пользователя" });
+
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
 }
 
 export default UserController;

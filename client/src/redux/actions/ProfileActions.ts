@@ -1,9 +1,10 @@
 import { Dispatch } from 'redux';
-import { patchAPI, postAPI } from '../../utils/fetchData';
+import { patchAPI } from '../../utils/fetchData';
 import { checkImage, imageUpload } from '../../utils/ImageUpload';
 import { ALERT, IAlertActionSet } from '../constants/alertType';
-import { IAuthReturned, UPDATE_USER_AVATAR, UserTypeActions } from '../constants/authType';
+import { IAuthReturned, UPDATE_USER_AVATAR, UPDATE_USER_NAME, UserTypeActions } from '../constants/authType';
 import { setAlertLoading, setAlertSuccess, unsetAlertLoading } from './AlertAction';
+import { wrapper } from './hof';
 
 
 export const updateAvatar = (
@@ -66,3 +67,13 @@ export const resetPassword = (
     dispatch({ type: ALERT, payload: { errors: err.message } });
   }
 }
+
+export const updateProfileName = wrapper(async (dispatch, name: string, token: string) => {
+  const { error, message } = await patchAPI('user_change_name', {
+    name
+  }, token);
+
+  dispatch({ type: UPDATE_USER_NAME, payload: name });
+  debugger
+  return { message, error };
+});

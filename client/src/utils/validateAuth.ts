@@ -35,6 +35,15 @@ export const validateRegister = () => {
   });
 }
 
+export const validateName = () => {
+  return yup.object({
+    name: yup.string()
+      .required('Поле обязательное')
+      .max(20, 'Must be 20 characters or less')
+      .min(4, 'Must be at least 4 characters'),
+  });
+}
+
 export const validateArticle = () => {
   return yup.object({
     category: yup.string()

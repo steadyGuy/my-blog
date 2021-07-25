@@ -24,6 +24,7 @@ router.get('/refresh_token', AuthController.refreshToken);
 
 router.patch('/user/:stuffToUpdate', auth, UserController.updateUser);
 router.patch('/reset_password', auth, UserController.resetPassword);
+router.patch('/user_change_name', auth, UserController.updateName);
 
 router.route('/category')
   .post(auth, CategoryController.createCategory)

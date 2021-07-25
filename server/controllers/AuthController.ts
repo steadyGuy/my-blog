@@ -165,17 +165,13 @@ const AuthController = {
       return res.status(400).json({ message: 'Ошибка при вводе кода. Попробуйте снова' });
     }
 
-
-    const password = phone + 'secret pass'
-    const passwordHash = await bcrypt.hash(password, 12)
-
     const user = await User.findOne({ account: phone })
 
     if (user) {
-      loginUser(res, user, 'number');
+      return loginUser(res, user, 'number');
     } else {
       const newUser = new User({
-        account: phone, passwordHash, name: 'Anonym', loginType: 'number', isActive: true,
+        account: phone, passwordHash: '', name: 'Anonym', loginType: 'number', isActive: true,
       });
       await newUser.save()
 
@@ -190,8 +186,6 @@ const AuthController = {
 
       return res.status(200).json({ message: 'Вы успешно авторизировались', accessToken, user: userMapper(newUser) });
     }
-
-    return res.status(200).json({ data });
   },
 };
 
@@ -218,7 +212,7 @@ const loginUser = async (res: Response, user: IUser, loginType: 'number' | 'soci
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
   console.log('loginTypeloginTypeloginType', loginType)
-  console.log(updatedUser)
+  console.log(updatedUser, 'UPDATE_USER')
   return res.status(200).json({ message: 'Вы успешно авторизировались', accessToken, user: userMapper(updatedUser) });
 }
 
