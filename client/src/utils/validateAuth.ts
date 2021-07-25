@@ -44,6 +44,9 @@ export const validateArticle = () => {
       .required('Обязательное поле')
       .max(50, 'Must be 50 characters or less')
       .min(10, 'Must be at least 10 characters'),
+    content: yup.string()
+      .required('Обязательное поле')
+      .min(10, 'Must be at least 10 characters'),
     description: yup.string()
       .required('Обязательное поле')
       .max(250, 'Must be 250 characters or less')

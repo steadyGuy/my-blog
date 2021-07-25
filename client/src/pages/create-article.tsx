@@ -1,13 +1,14 @@
 import { Box, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import { useFormik } from 'formik';
-import React, { FormEvent, useRef, useState } from 'react'
-import { useSelector } from 'react-redux';
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import { CreateForm } from '../components/cards/CreateForm';
 import { HorizontalCard } from '../components/cards/HorizontalCard';
 import { Editor } from '../components/Editor';
 import NotFound from '../components/global/NotFound/NotFound';
 import { SubmitButton } from '../components/SubmitBtn';
-import { selectAuth, selectCategories } from '../redux/selectors';
+import { createArticle } from '../redux/actions/ArticleAction';
+import { selectAuth } from '../redux/selectors';
 import { validateArticle } from '../utils/validateAuth';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -20,17 +21,22 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor: 'pointer',
       marginTop: theme.spacing(3),
     },
+    bodyWrapper: {
+      whiteSpace: 'normal',
+      lineBreak: 'anywhere',
+    },
   }),
 );
 
 const CreateArticle = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const initialState = {
     user: '',
     title: '',
     content: '',
     description: '',
-    thumbnail: null,
+    thumbnail: '',
     category: '',
     createdAt: new Date().toLocaleString(),
   }
@@ -43,13 +49,27 @@ const CreateArticle = () => {
     initialValues: initialState,
     validationSchema: validateArticle(),
     onSubmit: (values) => {
-
+      dispatch(createArticle(formikArticle.values, auth.accessToken))
     },
   });
 
+  useEffect(() => {
+    const div = divRef.current;
+    if (!div) return;
+
+    formikArticle.setFieldValue('content', div?.innerText)
+  }, [body]);
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!auth.accessToken) return;
     formikArticle.handleSubmit(e);
+
+    // try {
+    //   const photo = await imageUpload();
+    // } catch (err) {
+    //   console.log('Error with image loading', err);
+    // }
   }
 
   const auth = useSelector(selectAuth);
@@ -72,6 +92,9 @@ const CreateArticle = () => {
       </Grid>
       <Box mt={5}>
         <Editor setBody={setBody} />
+        <Typography align="right" variant="caption" color="error" component="p">
+          {formikArticle.touched.content && formikArticle.errors.content ? formikArticle.errors.content : null}
+        </Typography>
         <SubmitButton
           className={classes.button}
           color="primary"
@@ -81,7 +104,11 @@ const CreateArticle = () => {
           title={"Сохранить"}
         />
 
-        <div ref={divRef} dangerouslySetInnerHTML={{ __html: body }}></div>
+        <div
+          className={classes.bodyWrapper}
+          ref={divRef}
+          dangerouslySetInnerHTML={{ __html: body }}
+        />
 
       </Box>
     </>

@@ -102,9 +102,8 @@ export const CreateForm: FC<CreateFormProps> = ({ formik }) => {
         error={!!formik.errors['category'] && !!formik.touched['category']}
         helperText={formik.touched['category'] && formik.errors['category'] ? formik.errors['category'] : null}
       >
-        {console.log("categoriescategoriescategories", categories)}
         {categories.map((cat) => (
-          <MenuItem key={cat.id} value={cat.name}>
+          <MenuItem key={cat.id} value={cat.id}>
             {cat.name}
           </MenuItem>
         ))}

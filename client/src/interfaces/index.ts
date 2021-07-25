@@ -5,7 +5,7 @@ export interface IArticle {
   title: string;
   content: string;
   description: string;
-  thumbnail: File | null;
+  thumbnail: File | null | string;
   category: string;
   createdAt: Date | string;
 }

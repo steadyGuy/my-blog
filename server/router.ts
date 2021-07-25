@@ -1,4 +1,5 @@
 import express from 'express';
+import ArticleController from './controllers/ArticleController';
 import AuthController from './controllers/AuthController';
 import CategoryController from './controllers/CategoryController';
 import UserController from './controllers/UserController';
@@ -30,6 +31,8 @@ router.route('/category')
 
 router.route('/category/:id')
   .patch(auth, CategoryController.updateCategory)
-  .delete(auth, CategoryController.deleteCategory)
+  .delete(auth, CategoryController.deleteCategory);
+
+router.post('/article', auth, ArticleController.createArticle);
 
 export default router;
