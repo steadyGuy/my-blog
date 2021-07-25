@@ -31,8 +31,8 @@ function App() {
               <Route exact path="/:page" component={PageRender} />
               <Route exact path="/:page/:slug" component={PageRender} />
             </Switch>
-            <Footer />
           </Container>
+          <Footer />
         </Router>}
 
     </>

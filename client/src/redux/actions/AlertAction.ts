@@ -14,6 +14,13 @@ export const setAlertSuccess = (msg: string): IAlertActionSet => ({
   },
 });
 
+export const setAlertFailure = (msg: string): IAlertActionSet => ({
+  type: ALERT,
+  payload: {
+    errors: msg,
+  },
+});
+
 export const unsetAlertLoading = (): IAlertActionSet => ({
   type: ALERT,
   payload: {

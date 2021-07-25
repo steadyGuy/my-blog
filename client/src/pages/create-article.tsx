@@ -1,10 +1,12 @@
 import { Box, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import { useFormik } from 'formik';
-import React, { useState } from 'react'
+import React, { FormEvent, useRef, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { CreateForm } from '../components/cards/CreateForm';
 import { HorizontalCard } from '../components/cards/HorizontalCard';
+import { Editor } from '../components/Editor';
 import NotFound from '../components/global/NotFound/NotFound';
+import { SubmitButton } from '../components/SubmitBtn';
 import { selectAuth, selectCategories } from '../redux/selectors';
 import { validateArticle } from '../utils/validateAuth';
 
@@ -13,8 +15,10 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
 
     },
-    paper: {
-
+    button: {
+      padding: theme.spacing(1, 6, 1, 6),
+      cursor: 'pointer',
+      marginTop: theme.spacing(3),
     },
   }),
 );
@@ -31,6 +35,9 @@ const CreateArticle = () => {
     createdAt: new Date().toLocaleString(),
   }
 
+  const [body, setBody] = useState('');
+  const divRef = useRef<HTMLDivElement>(null);
+
   const formikArticle = useFormik({
     validateOnChange: false,
     initialValues: initialState,
@@ -39,6 +46,11 @@ const CreateArticle = () => {
 
     },
   });
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    formikArticle.handleSubmit(e);
+  }
 
   const auth = useSelector(selectAuth);
 
@@ -58,6 +70,20 @@ const CreateArticle = () => {
           <HorizontalCard article={formikArticle.values} />
         </Grid>
       </Grid>
+      <Box mt={5}>
+        <Editor setBody={setBody} />
+        <SubmitButton
+          className={classes.button}
+          color="primary"
+          type="button"
+          onClick={handleSubmit}
+          fullWidth={false}
+          title={"Сохранить"}
+        />
+
+        <div ref={divRef} dangerouslySetInnerHTML={{ __html: body }}></div>
+
+      </Box>
     </>
   )
 }

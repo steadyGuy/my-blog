@@ -50,7 +50,6 @@ export const validateArticle = () => {
       .min(50, 'Must be at least 50 characters'),
     thumbnail: yup.mixed().test('is-image', '', function (value: File) {
       const { path, parent, createError } = this;
-      debugger;
       const msg = checkImage(value);
       if (msg) {
         return createError({

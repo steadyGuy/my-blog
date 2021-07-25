@@ -22,7 +22,7 @@ export const updateAvatar = (
         return dispatch({ type: ALERT, payload: { errors: checkMsg } })
       }
       const res = await imageUpload(avatar);
-      url = res.url;
+      url = res[0].url;
     }
 
     const { error, message } = await patchAPI('user/avatar', {

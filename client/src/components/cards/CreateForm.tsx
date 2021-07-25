@@ -1,19 +1,14 @@
 import { Box, Button, createStyles, makeStyles, MenuItem, TextField, Theme, Typography } from '@material-ui/core'
-import React, { ChangeEvent, FC, SetStateAction } from 'react'
+import { ChangeEvent, FC } from 'react'
 import { useSelector } from 'react-redux';
 import { selectCategories } from '../../redux/selectors';
 import { checkImage } from '../../utils/ImageUpload';
 import { Input, InputStyled } from '../Input'
-import { SubmitButton } from '../SubmitBtn'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     title: {
 
-    },
-    button: {
-      padding: theme.spacing(1, 4, 1, 4),
-      cursor: 'pointer',
     },
     input: {
       marginTop: theme.spacing(1),
@@ -114,15 +109,6 @@ export const CreateForm: FC<CreateFormProps> = ({ formik }) => {
           </MenuItem>
         ))}
       </TextField>
-
-      <Box display="flex" justifyContent="flex-end" pb={4} mt={2} mr={2}>
-        <SubmitButton
-          className={classes.button}
-          color="primary"
-          fullWidth={false}
-          title={"Сохранить"}
-        />
-      </Box>
     </form>
   )
 }

@@ -9,3 +9,8 @@ export interface IArticle {
   category: string;
   createdAt: Date | string;
 }
+
+export interface IUploadedImageData {
+  public_id: string;
+  url: string;
+}
