@@ -14,3 +14,10 @@ export interface IUploadedImageData {
   public_id: string;
   url: string;
 }
+
+export interface IHomeArticlesByCategory {
+  _id: string;
+  name: string;
+  count: number;
+  articles: IArticle[];
+}

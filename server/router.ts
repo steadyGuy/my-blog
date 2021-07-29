@@ -35,5 +35,6 @@ router.route('/category/:id')
   .delete(auth, CategoryController.deleteCategory);
 
 router.post('/article', auth, ArticleController.createArticle);
+router.get('/home/articles', ArticleController.getHomeArticles);
 
 export default router;

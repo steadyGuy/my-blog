@@ -1,29 +1,12 @@
 import { Action } from 'redux';
-import { IUser } from '../../interfaces/user';
+import { IHomeArticlesByCategory } from '../../interfaces';
 
 export const CREATE_ARTICLE = 'CREATE_ARTICLE';
+export const GET_HOME_ARTICLES = 'GET_HOME_ARTICLES';
 
-// export interface IAuthReturned {
-//   accessToken: string;
-//   message: string;
-//   user: IUser | null;
-//   dialog?: boolean;
-// }
+export interface IArticleActionGetAll extends Action<typeof GET_HOME_ARTICLES> {
+  payload: IHomeArticlesByCategory[]
+}
 
-// export interface IUserAvatar {
-//   avatar: string;
-// }
-
-// export interface IProfileActionSetAvatar extends Action<typeof UPDATE_USER_AVATAR> {
-//   payload: IUserAvatar
-// }
-
-// export interface IAuthActionSetSuccess extends Action<typeof AUTH_SUCCESS> {
-//   payload: IAuthReturned & { errors: null }
-// }
-
-// export interface IAuthActionSetSmsDialog extends Action<typeof AUTH_SMS_DIALOG> {
-//   payload: boolean,
-// }
-
-// export type UserTypeActions = IAuthActionSetSuccess | IAuthActionSetSmsDialog | IProfileActionSetAvatar;
+export type ArticleTypeActions =
+  | IArticleActionGetAll;

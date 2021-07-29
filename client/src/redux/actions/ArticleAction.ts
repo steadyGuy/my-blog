@@ -1,6 +1,7 @@
 import { IArticle } from '../../interfaces';
-import { postAPI } from '../../utils/fetchData';
+import { getAPI, postAPI } from '../../utils/fetchData';
 import { imageUpload } from '../../utils/ImageUpload';
+import { GET_HOME_ARTICLES } from '../constants/articleType';
 import { wrapper } from './hof';
 
 export const createArticle = wrapper(async (dispatch, article: IArticle, token: string) => {
@@ -16,7 +17,14 @@ export const createArticle = wrapper(async (dispatch, article: IArticle, token: 
 
   const { message, error } = await postAPI('article', newArticle, token);
 
-  debugger;
   // dispatch({ type: CREATE_CATEGORY, payload: category });
+  return { message, error };
+});
+
+export const getHomeArticles = wrapper(async (dispatch) => {
+  const { message, error, articles } = await getAPI('home/articles');
+
+  dispatch({ type: GET_HOME_ARTICLES, payload: articles });
+
   return { message, error };
 });

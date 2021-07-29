@@ -57,7 +57,7 @@ const CreateArticle = () => {
     const div = divRef.current;
     if (!div) return;
 
-    formikArticle.setFieldValue('content', div?.innerText)
+    formikArticle.setFieldValue('content', body);
   }, [body]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
