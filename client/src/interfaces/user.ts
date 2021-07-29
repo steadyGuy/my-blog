@@ -12,6 +12,7 @@ export interface IUser {
   account: string;
   avatar: string;
   id: string;
+  _id: string;
   isActive: boolean;
   name: string;
   role: string;

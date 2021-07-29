@@ -87,6 +87,21 @@ const ArticleController = {
       return res.status(500).json({ message: err.message });
     }
   },
+  async getArticleById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      const article = await Article.findById(id);
+
+      if (!article) {
+        return res.status(400).json({ message: `Статьи с id ${id} не существует` });
+      }
+
+      return res.status(200).json({ article });
+
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
 }
 
 export default ArticleController;

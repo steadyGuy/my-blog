@@ -1,12 +1,19 @@
 import { IUser } from './user';
 
+export interface ICategory {
+  _id: string;
+  name: string;
+  createdAt: string | Date;
+}
+
 export interface IArticle {
+  _id: string;
   user: string | IUser;
   title: string;
   content: string;
   description: string;
   thumbnail: File | null | string;
-  category: string;
+  category: string | ICategory;
   createdAt: Date | string;
 }
 

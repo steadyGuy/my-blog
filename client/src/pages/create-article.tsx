@@ -87,7 +87,7 @@ const CreateArticle = () => {
           <CreateForm formik={formikArticle} />
         </Grid>
         <Grid item xs={4}>
-          <HorizontalCard article={formikArticle.values} />
+          <HorizontalCard article={{ ...formikArticle.values, _id: 'random-string-that-is-not-important' }} />
         </Grid>
       </Grid>
       <Box mt={5}>

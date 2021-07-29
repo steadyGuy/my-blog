@@ -1,49 +1,86 @@
 import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Typography, makeStyles, Box } from '@material-ui/core'
 import React, { FC } from 'react'
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { IArticle } from '../../interfaces';
+import { selectCategories } from '../../redux/selectors';
 
 const useStyles = makeStyles({
   root: {
     maxWidth: 345,
+    '& .MuiCardActions-root': {
+      paddingTop: 0,
+    }
   },
 });
 
 type HorizontalCardProps = {
   article: IArticle;
+  shortCard?: boolean;
 }
 
-export const HorizontalCard: FC<HorizontalCardProps> = ({ article }) => {
+const chooseImage = (image: string | File) => {
+  if (typeof image === 'string') {
+    return image;
+  }
+
+  return URL.createObjectURL(image);
+}
+
+export const HorizontalCard: FC<HorizontalCardProps> = ({ article, shortCard = false }) => {
 
   const classes = useStyles();
-  console.log(article)
+  const categories = useSelector(selectCategories);
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
+      <CardActionArea component={Link} to={`/article/${article._id}`}>
         <CardMedia
           component="img"
           alt="Contemplative Reptile"
           height="200"
-          image={article.thumbnail ? URL.createObjectURL(article.thumbnail) : 'https://www.looper.com/img/gallery/battle-in-5-seconds-after-meeting-release-date-characters-and-plot-what-we-know-so-far/intro-1624546404.jpg'}
+          image={
+            article.thumbnail ? chooseImage(article.thumbnail) : 'https://www.looper.com/img/gallery/battle-in-5-seconds-after-meeting-release-date-characters-and-plot-what-we-know-so-far/intro-1624546404.jpg'
+          }
           title="Contemplative Reptile"
         />
         <CardContent>
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            {article.createdAt}
+          </Typography>
           <Typography gutterBottom variant="h5" component="h2">
-            {!article.title ? 'Title' : article.title}
+            {!article.title ? 'Заголовок' : article.title}
           </Typography>
           <Typography variant="body2" color="textSecondary" component="p">
-            {!article.description ? 'description...' : article.description}
+            {!article.description ? 'Краткое описание статьи...' : !shortCard
+              ? article.description : article.description.slice(0, 100) + ' ...'}
           </Typography>
           <Box mt={2}>
-            <Typography variant="body2" color="textSecondary" gutterBottom>
-              {article.createdAt}
+            <Typography variant="body2" color="textSecondary">
+              Категория: <i>
+                {
+                  categories.find(cat =>
+                    cat.id === ((typeof article.category === 'string') ? article.category : article.category._id))?.name
+                  || 'Не выбрано'
+                }
+              </i>
             </Typography>
             <Typography variant="body2" color="textSecondary">
-              Категория: <i>{article.category}</i>
+              Автор: <i>
+                {
+                  typeof article.user !== 'string' &&
+                  <Link to={`/profile/${article.user._id}`}>{article.user.name}</Link>
+                }
+              </i>
             </Typography>
           </Box>
         </CardContent>
       </CardActionArea>
+      <CardActions disableSpacing>
+        <Button component={Link} to={`/article/${article._id}`} size="small" color="primary">
+          Читать дальше
+        </Button>
+      </CardActions>
     </Card>
   )
 }
