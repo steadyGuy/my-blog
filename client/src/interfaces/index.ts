@@ -7,7 +7,7 @@ export interface ICategory {
 }
 
 export interface IArticle {
-  _id: string;
+  _id?: string;
   user: string | IUser;
   title: string;
   content: string;

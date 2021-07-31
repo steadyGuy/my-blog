@@ -16,7 +16,9 @@ export const createArticle = wrapper(async (dispatch, article: IArticle, token: 
   const newArticle = { ...article, thumbnail: url };
 
   const { message, error } = await postAPI('article', newArticle, token);
-
+  if (!error) {
+    localStorage.removeItem('article_last_state');
+  }
   // dispatch({ type: CREATE_CATEGORY, payload: category });
   return { message, error };
 });

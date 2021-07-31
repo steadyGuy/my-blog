@@ -1,6 +1,6 @@
 import { IUploadedImageData } from '../interfaces';
 
-const mimeList = ['jpeg', 'pjpeg', 'png']
+const mimeList = ['jpeg', 'pjpeg', 'png', 'gif'];
 
 export const checkImage = (file: File) => {
   if (!file) {

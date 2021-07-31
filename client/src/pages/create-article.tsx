@@ -1,14 +1,17 @@
 import { Box, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@material-ui/core';
 import { useFormik } from 'formik';
-import React, { FormEvent, useEffect, useRef, useState } from 'react'
+import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateForm } from '../components/cards/CreateForm';
 import { HorizontalCard } from '../components/cards/HorizontalCard';
 import { Editor } from '../components/Editor';
 import NotFound from '../components/global/NotFound/NotFound';
 import { SubmitButton } from '../components/SubmitBtn';
+import { useInterval } from '../hooks/useInterval';
+import { IArticle } from '../interfaces';
 import { createArticle } from '../redux/actions/ArticleAction';
 import { selectAuth } from '../redux/selectors';
+import { compare } from '../utils/compareObjectByValues';
 import { validateArticle } from '../utils/validateAuth';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -31,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const CreateArticle = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const initialState = {
+  const initialState: IArticle = {
     user: '',
     title: '',
     content: '',
@@ -49,9 +52,49 @@ const CreateArticle = () => {
     initialValues: initialState,
     validationSchema: validateArticle(),
     onSubmit: (values) => {
-      dispatch(createArticle(formikArticle.values, auth.accessToken))
+      dispatch(createArticle(formikArticle.values, auth.accessToken));
     },
   });
+
+  // Каждую минуту обновлять стейт локально чтобы предотвратить
+  // потерю данных после случайно закрытой вкладки
+  useInterval(() => {
+    if (compare(initialState, formikArticle.values)) return;
+    let { thumbnail } = formikArticle.values;
+
+    if (!thumbnail) {
+      thumbnail = '';
+    }
+
+    // if (typeof thumbnail !== 'string' && thumbnail) {
+    //   console.log(thumbnail, 'thumbnail')
+    //   thumbnail = URL.createObjectURL(thumbnail);
+    // }
+
+    localStorage.setItem('article_last_state', JSON.stringify({
+      ...formikArticle.values, thumbnail,
+    }));
+    console.log('LOCALLY SAVED!');
+  }, 30 * 100);
+
+  useEffect(() => {
+
+    const preSavedArticleState = localStorage.getItem('article_last_state');
+    if (preSavedArticleState) {
+      let obj = JSON.parse(preSavedArticleState);
+      // let { thumbnail } = obj;
+      // if (typeof thumbnail === 'string' && thumbnail) {
+      //   console.log(thumbnail, 'thumbnail');
+      //   const data = await fetch(thumbnail);
+      //   const blob = await data.blob();
+      //   // URL.revokeObjectURL(thumbnail);
+      //   thumbnail = blob;
+      // }
+      setBody(obj.content);
+      formikArticle.setValues(obj);
+    }
+
+  }, []);
 
   useEffect(() => {
     const div = divRef.current;
@@ -91,7 +134,7 @@ const CreateArticle = () => {
         </Grid>
       </Grid>
       <Box mt={5}>
-        <Editor setBody={setBody} />
+        <Editor setBody={setBody} body={body} />
         <Typography align="right" variant="caption" color="error" component="p">
           {formikArticle.touched.content && formikArticle.errors.content ? formikArticle.errors.content : null}
         </Typography>

@@ -8,9 +8,10 @@ import { checkImage, imageUpload } from '../../utils/ImageUpload';
 
 type EditorProps = {
   setBody: (body: string) => void;
+  body: string;
 }
 
-export const Editor: FC<EditorProps> = ({ setBody }) => {
+export const Editor: FC<EditorProps> = ({ setBody, body }) => {
   const quillRef = useRef<ReactQuill>(null);
   const dispatch = useDispatch();
   const modules = { toolbar: { container } };
@@ -70,6 +71,7 @@ export const Editor: FC<EditorProps> = ({ setBody }) => {
         modules={modules}
         onChange={handleChange}
         ref={quillRef}
+        value={body}
       />
     </div>
   );

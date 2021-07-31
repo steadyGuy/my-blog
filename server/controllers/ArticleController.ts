@@ -12,7 +12,7 @@ const ArticleController = {
       const { title, description, thumbnail, content, category } = req.body;
 
       const newArticle = new Article({
-        title: title.toLowerCase(),
+        title: title,
         description,
         thumbnail,
         content,
