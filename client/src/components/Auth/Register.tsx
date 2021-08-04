@@ -60,6 +60,7 @@ export const Register = () => {
         setShowPassword={setShowPasswordConfirm}
         withPassword={true}
       />
+
       <SubmitButton className={classes.submit} title={"Sign Up"} />
     </form>
   );

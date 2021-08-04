@@ -2,6 +2,7 @@ import { Box, Grid } from '@material-ui/core';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { Loader } from '../components/Alert/Loader';
 import { HorizontalCard } from '../components/cards/HorizontalCard';
 import { getHomeArticles } from '../redux/actions/ArticleAction';
 import { selectArticles } from '../redux/selectors';
@@ -16,6 +17,8 @@ const Home = () => {
     dispatch(getHomeArticles());
 
   }, [dispatch]);
+
+  if (articlesByCategory.length === 0) return <Loader />;
 
   return (
     <div>

@@ -9,7 +9,6 @@ import Header from './components/global/Header';
 import { PageRender } from './PageRender';
 import { refreshToken } from './redux/actions/AuthActions';
 import { getCategories } from './redux/actions/CategoryAction';
-import { PAGE_LOADED } from './redux/constants/globalType';
 import { selectGlobal } from './redux/selectors';
 function App() {
   const dispatch = useDispatch();
@@ -18,26 +17,23 @@ function App() {
   useEffect(() => {
     dispatch(refreshToken());
     dispatch(getCategories())
-    dispatch({ type: PAGE_LOADED, payload: true });
   }, [dispatch])
 
   return (
     <>
       <CssBaseline />
-      {!global.loaded ? <Loader /> :
-        <Router>
-          <Alert />
-          <Header />
-          <Container>
-            <Switch>
-              <Route exact path="/" component={PageRender} />
-              <Route exact path="/:page" component={PageRender} />
-              <Route exact path="/:page/:slug" component={PageRender} />
-            </Switch>
-          </Container>
-          <Footer />
-        </Router>}
-
+      <Router>
+        <Alert />
+        <Header />
+        <Container>
+          <Switch>
+            <Route exact path="/" component={PageRender} />
+            <Route exact path="/:page" component={PageRender} />
+            <Route exact path="/:page/:slug" component={PageRender} />
+          </Switch>
+        </Container>
+        <Footer />
+      </Router>
     </>
   );
 }
