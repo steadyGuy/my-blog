@@ -1,7 +1,7 @@
 import { IArticle } from '../../interfaces';
 import { getAPI, postAPI } from '../../utils/fetchData';
 import { imageUpload } from '../../utils/ImageUpload';
-import { GET_HOME_ARTICLES } from '../constants/articleType';
+import { GET_ARTICLES_BY_SLUG, GET_HOME_ARTICLES } from '../constants/articleType';
 import { wrapper } from './hof';
 
 export const createArticle = wrapper(async (dispatch, article: IArticle, token: string) => {
@@ -27,6 +27,15 @@ export const getHomeArticles = wrapper(async (dispatch) => {
   const { message, error, articles } = await getAPI('home/articles');
 
   dispatch({ type: GET_HOME_ARTICLES, payload: articles });
+
+  return { message, error };
+});
+
+export const getArticlesBySlug = wrapper(async (dispatch, id) => {
+  const { message, error, articles: { total, data } } =
+    await getAPI(`articles/${id}?limit=2`);
+
+  dispatch({ type: GET_ARTICLES_BY_SLUG, payload: { id, articles: data, total } });
 
   return { message, error };
 });

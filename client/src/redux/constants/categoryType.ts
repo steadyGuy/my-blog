@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { ICategory } from '../../interfaces/category';
+import { ICategory } from '../../interfaces';
 
 export const CREATE_CATEGORY = 'CREATE_CATEGORY';
 export const UPDATE_CATEGORY = 'UPDATE_CATEGORY';

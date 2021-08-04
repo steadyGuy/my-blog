@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 import { Loader } from '../components/Alert/Loader';
 import { HorizontalCard } from '../components/cards/HorizontalCard';
 import { getHomeArticles } from '../redux/actions/ArticleAction';
-import { selectArticles } from '../redux/selectors';
+import { selectArticlesHome } from '../redux/selectors';
 
 const Home = () => {
 
   const dispatch = useDispatch();
-  const articlesByCategory = useSelector(selectArticles)
+  const articlesByCategory = useSelector(selectArticlesHome)
 
   useEffect(() => {
 
@@ -24,9 +24,10 @@ const Home = () => {
     <div>
       <h2>Home</h2>
       {articlesByCategory.map(cat => {
+        console.log(cat)
         return (
-          <>
-            <Link to={`/articles/${cat.name}`}>
+          <div key={cat._id}>
+            <Link to={`/articles/${cat.slug}`}>
               <h3>{cat.name} (${cat.count})</h3>
             </Link>
             <hr />
@@ -44,7 +45,7 @@ const Home = () => {
                 Загрузить больше &gt;&gt;
               </Link>
             }
-          </>
+          </div>
         );
       })}
     </div>

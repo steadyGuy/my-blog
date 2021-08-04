@@ -1,4 +1,4 @@
-import { ICategory } from '../../interfaces/category';
+import { ICategory } from '../../interfaces';
 import { deleteAPI, getAPI, patchAPI, postAPI } from '../../utils/fetchData';
 import { CREATE_CATEGORY, DELETE_CATEGORY, GET_CATEGORIES, UPDATE_CATEGORY } from '../constants/categoryType';
 import { wrapper } from './hof';
@@ -30,7 +30,6 @@ export const deleteCategory = wrapper(async (dispatch, catId: string, token: str
 
 export const getCategories = wrapper(async (dispatch) => {
   const { categories, error } = await getAPI('category');
-
   dispatch({ type: GET_CATEGORIES, payload: categories });
   return { error };
 });

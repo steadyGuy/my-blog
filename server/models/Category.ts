@@ -3,6 +3,7 @@ import connection from '../config/db';
 
 export interface ICategory extends Document {
   name: string;
+  slug: string;
   createdAt: Date | string;
   updatedAt: Date | string;
 }
@@ -12,9 +13,13 @@ const schema = new Schema({
     type: String,
     required: [true, 'Пожалуйста, добавьте вашу категорию'],
     trim: true,
-    unique: true,
     maxLength: [50, 'Имя слишком большое для категории'],
   },
+  slug: {
+    type: String,
+    unique: true,
+    required: true,
+  }
 }, {
   timestamps: true,
 });

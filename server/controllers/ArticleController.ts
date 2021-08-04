@@ -74,6 +74,7 @@ const ArticleController = {
           $group: {
             _id: "$category._id",
             name: { $first: "$category.name" },
+            slug: { $first: "$category.slug" },
             articles: { $push: "$$ROOT" },
             count: { $sum: 1 },
           }
@@ -86,6 +87,7 @@ const ArticleController = {
             },
             count: 1,
             name: 1,
+            slug: 1,
           }
         },
       ]);
@@ -162,7 +164,7 @@ const ArticleController = {
         total = Math.floor(count / limit) + 1;
       }
 
-      return res.status(200).json({ articles: { total, count, data: articles[0].totalData } });
+      return res.status(200).json({ articles: { total, data: articles[0].totalData } });
 
     } catch (err) {
       return res.status(500).json({ message: err.message });

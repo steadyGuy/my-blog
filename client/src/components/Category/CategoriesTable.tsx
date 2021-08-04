@@ -12,7 +12,7 @@ import { Box, IconButton, Paper } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAuth, selectCategories } from '../../redux/selectors';
 import { useState } from 'react';
-import { ICategory } from '../../interfaces/category';
+import { ICategory } from '../../interfaces';
 import { UpdateCategoryDialog } from './UpdateCategoryDialog';
 import { deleteCategory } from '../../redux/actions/CategoryAction';
 

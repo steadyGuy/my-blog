@@ -2,6 +2,8 @@ import { IUser } from './user';
 
 export interface ICategory {
   _id: string;
+  id: string;
+  slug: string;
   name: string;
   createdAt: string | Date;
 }
@@ -25,6 +27,13 @@ export interface IUploadedImageData {
 export interface IHomeArticlesByCategory {
   _id: string;
   name: string;
+  slug: string;
   count: number;
+  articles: IArticle[];
+}
+
+export interface IArticlesByCategory {
+  id: string;
+  total: number;
   articles: IArticle[];
 }

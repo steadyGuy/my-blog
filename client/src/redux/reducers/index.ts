@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { alertReducer } from './alert';
-import { articleReducer } from './article';
+import { articlesByCategoryHome } from './articlesByCategoryHome';
+import { articlesByCategory } from './articlesByCategory';
 import { authReducer } from './auth';
 import { categoryReducer } from './category';
 import { globalReducer } from './global';
@@ -10,5 +11,6 @@ export default combineReducers({
   alert: alertReducer,
   categories: categoryReducer,
   global: globalReducer,
-  articlesByCategory: articleReducer,
+  articlesByCategoryHome: articlesByCategoryHome,
+  articlesByCategory: articlesByCategory,
 });

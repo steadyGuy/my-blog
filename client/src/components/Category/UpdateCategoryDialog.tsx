@@ -1,5 +1,5 @@
 import { Dialog, DialogTitle, TextField, DialogContent, DialogActions, Button } from '@material-ui/core';
-import { ICategory } from '../../interfaces/category';
+import { ICategory } from '../../interfaces';
 
 import { ChangeEvent, FC, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';

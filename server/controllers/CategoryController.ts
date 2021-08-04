@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { IReqAuth } from '../interfaces';
 import categoryMapper from '../mappers/category';
 import Category from '../models/Category';
+import { convertTitleToSlug } from '../utils/convertTitleToSlug';
 
 const CategoryController = {
   async createCategory(req: IReqAuth, res: Response): Promise<any> {
@@ -21,7 +22,7 @@ const CategoryController = {
         return res.status(400).json({ message: 'Категория с подобным именем уже создана' });
       }
 
-      const newCategory = new Category({ name });
+      const newCategory = new Category({ name, slug: convertTitleToSlug(name) });
 
       await newCategory.save();
 

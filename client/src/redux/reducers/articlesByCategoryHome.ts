@@ -3,7 +3,7 @@ import { ArticleTypeActions, GET_HOME_ARTICLES } from '../constants/articleType'
 
 const initilState: IHomeArticlesByCategory[] = [];
 
-export const articleReducer = (state = initilState, action: ArticleTypeActions): IHomeArticlesByCategory[] => {
+export const articlesByCategoryHome = (state = initilState, action: ArticleTypeActions): IHomeArticlesByCategory[] => {
 
   switch (action.type) {
     case GET_HOME_ARTICLES:
