@@ -25,10 +25,15 @@ export const createArticle = wrapper(async (dispatch, article: IArticle, token: 
 
 export const updateArticle = wrapper(async (dispatch, article: IArticle, id: string, token: string) => {
 
-  // TODO: Реализовать update главного изображения (thumbnail)
+  let url = '';
+  if (typeof article.thumbnail !== 'string') {
+    const photo = await imageUpload(article.thumbnail);
+    url = photo[0].url;
+  } else {
+    url = article.thumbnail;
+  }
 
-  const newArticle = { ...article };
-  debugger;
+  const newArticle = { ...article, thumbnail: url };
 
   const { message, error } = await patchAPI(`article/${id}`, newArticle, token);
 
