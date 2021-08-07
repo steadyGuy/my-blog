@@ -38,5 +38,6 @@ router.post('/article', auth, ArticleController.createArticle);
 router.get('/home/articles', ArticleController.getHomeArticles);
 router.get('/articles/:categoryId', ArticleController.getArticlesByCategory);
 router.get('/article/:id', ArticleController.getArticleById);
+router.patch('/article/:id', ArticleController.updateArticleById);
 
 export default router;

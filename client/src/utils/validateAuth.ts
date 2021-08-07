@@ -60,9 +60,12 @@ export const validateArticle = () => {
       .required('Обязательное поле')
       .max(250, 'Must be 250 characters or less')
       .min(50, 'Must be at least 50 characters'),
-    thumbnail: yup.mixed().test('is-image', '', function (value: File) {
+    thumbnail: yup.mixed().test('is-image', '', function (value: File | string) {
       const { path, parent, createError } = this;
-      const msg = checkImage(value);
+      let msg = null;
+      if (typeof value !== 'string') {
+        msg = checkImage(value);
+      }
       if (msg) {
         return createError({
           path,

@@ -185,6 +185,18 @@ const ArticleController = {
       return res.status(500).json({ message: err.message });
     }
   },
+  async updateArticleById(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+      console.log('req.body', req.body)
+      const article = await Article.findByIdAndUpdate(id, req.body);
+
+      return res.status(200).json({ message: 'Статья успешно обновлена' });
+
+    } catch (err) {
+      return res.status(500).json({ message: err.message });
+    }
+  },
 }
 
 export default ArticleController;

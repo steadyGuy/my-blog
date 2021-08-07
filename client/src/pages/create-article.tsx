@@ -2,6 +2,7 @@ import { Box, createStyles, Grid, makeStyles, Paper, Theme, Typography } from '@
 import { useFormik } from 'formik';
 import React, { FormEvent, useCallback, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { CreateForm } from '../components/cards/CreateForm';
 import { HorizontalCard } from '../components/cards/HorizontalCard';
 import { Editor } from '../components/Editor';
@@ -9,9 +10,10 @@ import NotFound from '../components/global/NotFound/NotFound';
 import { SubmitButton } from '../components/SubmitBtn';
 import { useInterval } from '../hooks/useInterval';
 import { IArticle } from '../interfaces';
-import { createArticle } from '../redux/actions/ArticleAction';
+import { createArticle, updateArticle } from '../redux/actions/ArticleAction';
 import { selectAuth } from '../redux/selectors';
 import { compare } from '../utils/compareObjectByValues';
+import { getAPI } from '../utils/fetchData';
 import { validateArticle } from '../utils/validateAuth';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -45,20 +47,56 @@ const CreateArticle = () => {
   }
 
   const [body, setBody] = useState('');
+  const [update, setUpdate] = useState<{ yes: boolean, id: string }>({ yes: false, id: '' });
   const divRef = useRef<HTMLDivElement>(null);
+  const history = useHistory();
 
   const formikArticle = useFormik({
     validateOnChange: false,
     initialValues: initialState,
     validationSchema: validateArticle(),
-    onSubmit: (values) => {
-      dispatch(createArticle(formikArticle.values, auth.accessToken));
+    onSubmit: async (values) => {
+      debugger;
+      if (update.yes) {
+        dispatch(updateArticle(formikArticle.values, update.id, auth.accessToken));
+      } else {
+        dispatch(createArticle(formikArticle.values, auth.accessToken));
+      }
     },
   });
+
+  useEffect(() => {
+
+    (async () => {
+      const isUpdating = history.location.search.includes('update');
+      if (isUpdating) {
+        const articleId = history.location.search.slice(8);
+        const { article } = await getAPI(`article/${articleId}`);
+        console.log('articlearticle', article);
+        // TODO: Сделать через сохранения стейта article в redux (вместо async-запроса)
+        // по типу в reducers: currentArticle: article (на подобии этого)
+        formikArticle.setValues({
+          ...article, id: articleId,
+        });
+        setBody(article.content);
+        return setUpdate({ yes: true, id: history.location.search.slice(8) })
+      }
+      setUpdate({ yes: false, id: '' });
+      const preSavedArticleState = localStorage.getItem('article_last_state');
+      // обязательно проверить update ли или нет
+      if (preSavedArticleState) {
+        let obj = JSON.parse(preSavedArticleState);
+        setBody(obj.content);
+        formikArticle.setValues(obj);
+      }
+    })()
+
+  }, [history.location.search]);
 
   // Каждую минуту обновлять стейт локально чтобы предотвратить
   // потерю данных после случайно закрытой вкладки
   useInterval(() => {
+    if (update.yes) return;
     if (compare(initialState, formikArticle.values)) return;
     let { thumbnail } = formikArticle.values;
 
@@ -71,25 +109,6 @@ const CreateArticle = () => {
       ...formikArticle.values, thumbnail,
     }));
   }, 30 * 100);
-
-  useEffect(() => {
-
-    const preSavedArticleState = localStorage.getItem('article_last_state');
-    if (preSavedArticleState) {
-      let obj = JSON.parse(preSavedArticleState);
-      // let { thumbnail } = obj;
-      // if (typeof thumbnail === 'string' && thumbnail) {
-      //   console.log(thumbnail, 'thumbnail');
-      //   const data = await fetch(thumbnail);
-      //   const blob = await data.blob();
-      //   // URL.revokeObjectURL(thumbnail);
-      //   thumbnail = blob;
-      // }
-      setBody(obj.content);
-      formikArticle.setValues(obj);
-    }
-
-  }, []);
 
   useEffect(() => {
     const div = divRef.current;

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { ChangeEvent, FC, useState } from 'react';
 import Pagination from '@material-ui/lab/Pagination';
 
 type PaginationProps = {
@@ -9,8 +9,18 @@ const CustomPagination: FC<PaginationProps> = ({ total }) => {
 
   const [page, setPage] = useState(1);
 
+  const handleChange = (e: ChangeEvent<any>, value: any) => {
+    setPage(value);
+  };
+
   return (
-    <Pagination count={total} variant="outlined" color="primary" />
+    <Pagination
+      count={total}
+      page={page}
+      variant="outlined"
+      onChange={handleChange}
+      color="primary"
+    />
   );
 }
 
