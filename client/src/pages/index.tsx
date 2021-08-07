@@ -1,4 +1,4 @@
-import { Box, Grid } from '@material-ui/core';
+import { Box, Grid, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -24,18 +24,19 @@ const Home = () => {
     <div>
       <h2>Home</h2>
       {articlesByCategory.map(cat => {
-        console.log(cat)
         return (
           <div key={cat._id}>
-            <Link to={`/articles/${cat.slug}`}>
-              <h3>{cat.name} (${cat.count})</h3>
-            </Link>
+            <Typography variant="h3" component={Link} to={`/articles/${cat.slug}`}>
+              {cat.name} ({cat.count})
+            </Typography>
             <hr />
             <Grid container spacing={3}>
               {cat.articles.map(article => {
                 return <Grid item xs={3} key={article._id}>
                   {
-                    <HorizontalCard shortCard article={{ ...article, category: article.category }} />
+                    <HorizontalCard
+                      shortCard
+                      article={{ ...article, category: article.category }} />
                   }
                 </Grid>
               })}

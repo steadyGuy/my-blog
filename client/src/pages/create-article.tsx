@@ -62,19 +62,14 @@ const CreateArticle = () => {
     if (compare(initialState, formikArticle.values)) return;
     let { thumbnail } = formikArticle.values;
 
-    if (!thumbnail) {
-      thumbnail = '';
-    }
-
-    // if (typeof thumbnail !== 'string' && thumbnail) {
-    //   console.log(thumbnail, 'thumbnail')
-    //   thumbnail = URL.createObjectURL(thumbnail);
-    // }
+    // мы не сохраняем thumbnail локально
+    // после закрытия он теряеться (не критично)
+    // POSSIBLE TODO: сохранять как base64 в localstorage
+    thumbnail = '';
 
     localStorage.setItem('article_last_state', JSON.stringify({
       ...formikArticle.values, thumbnail,
     }));
-    console.log('LOCALLY SAVED!');
   }, 30 * 100);
 
   useEffect(() => {

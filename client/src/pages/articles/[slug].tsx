@@ -1,15 +1,25 @@
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, makeStyles, Typography, Theme, Box } from '@material-ui/core';
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { HorizontalCard } from '../../components/cards/HorizontalCard';
 import NotFound from '../../components/global/NotFound/NotFound';
+import Pagination from '../../components/global/Pagination';
 import { ICategory } from '../../interfaces';
 import { IParams } from '../../interfaces/user';
 import { getArticlesBySlug } from '../../redux/actions/ArticleAction';
 import { selectArticlesByCategory, selectCategories } from '../../redux/selectors';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  pagination: {
+    display: 'flex',
+    justifyContent: 'center',
+    marginTop: theme.spacing(5),
+  },
+}));
+
 const Articles = () => {
+  const classes = useStyles();
 
   const { slug }: IParams = useParams();
   const dispatch = useDispatch();
@@ -48,6 +58,11 @@ const Articles = () => {
           );
         })}
       </Grid>
+      <Box className={classes.pagination}>
+        <Pagination
+          total={10}
+        />
+      </Box>
     </>
   )
 }

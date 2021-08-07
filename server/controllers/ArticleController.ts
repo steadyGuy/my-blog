@@ -66,17 +66,17 @@ const ArticleController = {
           $unwind: "$category",
         },
         {
-          $sort: {
-            "createdAt": -1,
-          }
-        },
-        {
           $group: {
             _id: "$category._id",
             name: { $first: "$category.name" },
             slug: { $first: "$category.slug" },
             articles: { $push: "$$ROOT" },
             count: { $sum: 1 },
+          }
+        },
+        {
+          $sort: {
+            "name": -1,
           }
         },
         // Pagination
