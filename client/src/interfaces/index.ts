@@ -34,6 +34,7 @@ export interface IHomeArticlesByCategory {
 
 export interface IArticlesByCategory {
   id: string;
-  total: number;
+  pagesCount: number;
+  search: string;
   articles: IArticle[];
 }

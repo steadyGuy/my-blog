@@ -48,11 +48,12 @@ export const getHomeArticles = wrapper(async (dispatch) => {
   return { message, error };
 });
 
-export const getArticlesBySlug = wrapper(async (dispatch, id) => {
-  const { message, error, articles: { total, data } } =
-    await getAPI(`articles/${id}?limit=2`);
-
-  dispatch({ type: GET_ARTICLES_BY_SLUG, payload: { id, articles: data, total } });
+export const getArticlesBySlug = wrapper(async (dispatch, id: string, search: string) => {
+  let limit = 1;
+  let value = search ? search : `?page=${1}`;
+  const { message, error, articles: { pagesCount, data } } =
+    await getAPI(`articles/${id}${value}&limit=${limit}`);
+  dispatch({ type: GET_ARTICLES_BY_SLUG, payload: { id, articles: data, pagesCount, search } });
 
   return { message, error };
 });
